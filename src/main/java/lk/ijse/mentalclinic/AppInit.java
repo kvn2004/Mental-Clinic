@@ -1,5 +1,11 @@
 package lk.ijse.mentalclinic;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 /**
  * --------------------------------------------
  * Author: Vihanga Nimsara(kvn2004)
@@ -10,5 +16,18 @@ package lk.ijse.mentalclinic;
  * --------------------------------------------
  **/
 
-public class AppInit {
+public class AppInit extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent load = FXMLLoader.load(getClass().getResource("/ReceptionistDashboardForm.fxml"));
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.setTitle("Mental Clinic");
+        stage.show();
+
+    }
 }
