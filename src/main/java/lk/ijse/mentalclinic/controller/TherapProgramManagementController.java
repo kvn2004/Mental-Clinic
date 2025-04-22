@@ -20,6 +20,7 @@ import lk.ijse.mentalclinic.bo.custom.TherapyProgramBO;
 import lk.ijse.mentalclinic.dto.TherapyProgramDTO;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -120,10 +121,10 @@ public class TherapProgramManagementController implements Initializable {
         }
 
         // All valid
-        showAlert("Success", "All inputs are valid!");
+        System.out.println("All are correct");
         // Proceed with your logic...
-
-        boolean isSaved=therapyProgramBO.saveProgram(new TherapyProgramDTO(id,name,duration,cost,description));
+        BigDecimal fee = new BigDecimal(cost);
+        boolean isSaved=therapyProgramBO.saveProgram(new TherapyProgramDTO(id,name,duration,fee,description));
         if (isSaved){
             showAlert("Success", "Therapy program has been saved!");
         }
