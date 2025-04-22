@@ -13,14 +13,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import lk.ijse.mentalclinic.bo.BOFactory;
 import lk.ijse.mentalclinic.bo.custom.Impl.TherepistBO;
 import lk.ijse.mentalclinic.dto.TherapistDTO;
+import lk.ijse.mentalclinic.dto.TherapyProgramDTO;
 import lk.ijse.mentalclinic.entity.Therapist;
 import lk.ijse.mentalclinic.tm.TherapistTM;
+import lk.ijse.mentalclinic.tm.TherapyProgramTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
@@ -79,7 +82,11 @@ public class TherapistManagementController implements Initializable {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-
+       boolean isDeleted =therepistBO.deleteTherapist(txtID.getText());
+       if(isDeleted){
+           AlertUtil.showSuccess("Deleted Therapist","Therapist deleted successfully");
+           refresh();
+       }
     }
 
     @FXML
@@ -125,11 +132,55 @@ public class TherapistManagementController implements Initializable {
         therapist.setAvailabilitySchedule(status);
 
         boolean isSaved = therepistBO.saveTherapist(therapist);
+        if(isSaved){
+            AlertUtil.showSuccess("Successful","Successfully saved the therapist.");
+            refresh();
+        }
     }
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
 
+        String id = txtID.getText();
+        String name = txtName.getText();
+        String specialization = cbSpecialization.getValue();
+        String status = cbStatus.getValue();
+        // Regex patterns
+        Pattern idPattern = Pattern.compile("^T\\d{3}$");
+        Pattern namePattern = Pattern.compile("^[A-Za-z ]{3,}$");
+
+        if (!idPattern.matcher(id).matches()) {
+            AlertUtil.showError("Invalid ID", "ID must start with 'T' followed by 3 digits.");
+            return;
+        }
+
+        if (!namePattern.matcher(name).matches()) {
+            AlertUtil.showError("Invalid Name", "Name must contain only letters and be at least 3 characters.");
+            return;
+        }
+
+        if (specialization == null || specialization.isEmpty()) {
+            AlertUtil.showError("Specialization Required", "Please select a specialization.");
+            return;
+        }
+
+        if (status == null || status.isEmpty()) {
+            AlertUtil.showError("Status Required", "Please select a status.");
+            return;
+        }
+        System.out.println("Valid data. Proceed with saving...");
+
+        TherapistDTO therapist = new TherapistDTO();
+        therapist.setTherapistID(id);
+        therapist.setFullName(name);
+        therapist.setSpecialization(specialization);
+        therapist.setAvailabilitySchedule(status);
+
+        boolean isUpdated = therepistBO.updateTherapist(therapist);
+        if (isUpdated){
+            AlertUtil.showSuccess("Successful","Successfully updated the therapist.");
+            refresh();
+        }
     }
 
     @FXML
@@ -145,8 +196,14 @@ public class TherapistManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        colID.setCellValueFactory(new PropertyValueFactory<>("therapistID"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("availabilitySchedule"));
+        colProgram.setCellValueFactory(new PropertyValueFactory<>("specialization"));
+
         cbStatus.getItems().addAll("Available", "In Progress");
         setValues();
+        loadTable();
 
     }
     private void setValues() {
@@ -157,5 +214,35 @@ public class TherapistManagementController implements Initializable {
         }
         cbSpecialization.setItems(objects);
     }
+   private void loadTable(){
+        List<TherapistDTO> therapistDTOS = therepistBO.getAllTherapyPrograms();
 
+        ObservableList<TherapistTM> obList = FXCollections.observableArrayList();
+       System.out.println(obList);
+        for (TherapistDTO therapistDTO:therapistDTOS){
+            obList.add(new TherapistTM(
+                    therapistDTO.getTherapistID(),
+                    therapistDTO.getFullName(),
+                    therapistDTO.getAvailabilitySchedule(),
+                    therapistDTO.getSpecialization()
+            ));
+        }
+        tblTherapist.setItems(obList);
+    }
+
+   private void refresh(){
+        loadTable();
+         txtID.setText("");
+         txtName.setText("");
+        cbSpecialization.setValue(null);
+        cbStatus.setValue(null);
+    }
+
+    public void therapistOnClick(MouseEvent mouseEvent) {
+        TherapistTM selectedItem = tblTherapist.getSelectionModel().getSelectedItem();
+        txtID.setText(selectedItem.getTherapistID());
+        txtName.setText(selectedItem.getFullName());
+        cbSpecialization.setValue(selectedItem.getSpecialization());
+        cbStatus.setValue(selectedItem.getAvailabilitySchedule());
+    }
 }
