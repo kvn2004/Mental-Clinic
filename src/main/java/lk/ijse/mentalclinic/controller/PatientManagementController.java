@@ -71,7 +71,6 @@ public class PatientManagementController {
     @FXML
     ImageView imgExit;
 
-    BOFactory factory = (BOFactory) BOFactory.getInstance().getBO(BOFactory.BOTypes.PATIENT);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -96,7 +95,7 @@ public class PatientManagementController {
     public void imgExitOnMouseClicked(MouseEvent mouseEvent) throws IOException {
         Stage window = (Stage) imgExit.getScene().getWindow();
         window.close();
-        Parent parent = FXMLLoader.load(getClass().getResource("/AdminDashboardForm.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/ReceptionistDashboardForm.fxml"));
         Scene scene = new Scene(parent);
         Stage stage = new Stage();
         stage.setScene(scene);

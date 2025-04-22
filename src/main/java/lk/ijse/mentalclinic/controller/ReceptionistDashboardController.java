@@ -4,12 +4,18 @@ import com.jfoenix.controls.JFXButton;
 import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class ReceptionistDashboardController {
 
@@ -38,18 +44,40 @@ public class ReceptionistDashboardController {
     private Label lblUserName;
 
     @FXML
-    void patientHistoryOnAction(ActionEvent event) {
+    void patientHistoryOnAction(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnPatientHistory.getScene().getWindow();
+        stage.close();
+
+        Parent load = FXMLLoader.load(getClass().getResource("/PatientTheropyHistoryForm.fxml"));
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.setTitle("Mental Clinic");
+        stage.show();
 
     }
 
     @FXML
-    void patientOnAction(ActionEvent event) {
+    void patientOnAction(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnPatientHistory.getScene().getWindow();
+        stage.close();
 
+        Parent load = FXMLLoader.load(getClass().getResource("/PatientManagementForm.fxml"));
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.setTitle("Mental Clinic");
+        stage.show();
     }
 
     @FXML
-    void paymentOnAction(ActionEvent event) {
+    void paymentOnAction(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnPatientHistory.getScene().getWindow();
+        stage.close();
 
+        Parent load = FXMLLoader.load(getClass().getResource("/PaymentInvoiceManagementForm.fxml"));
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.setTitle("Mental Clinic");
+        stage.show();
     }
 
     @FXML
@@ -103,11 +131,26 @@ public class ReceptionistDashboardController {
     }
 
     @FXML
-    void therapySessionOnAction(ActionEvent event) {
+    void therapySessionOnAction(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnPatientHistory.getScene().getWindow();
+        stage.close();
+
+        Parent load = FXMLLoader.load(getClass().getResource("/TherapySessionSchedulingForm.fxml"));
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.setTitle("Mental Clinic");
+        stage.show();
 
     }
 
-    public void imgExitOnMouseClicked(MouseEvent mouseEvent) {
+    public void imgExitOnMouseClicked(MouseEvent mouseEvent) throws IOException {
+        Stage stage = (Stage) btnPatientHistory.getScene().getWindow();
+        stage.close();
 
+        Parent load = FXMLLoader.load(getClass().getResource("/logingPage.fxml"));
+        Scene scene = new Scene(load);
+        stage.setScene(scene);
+        stage.setTitle("Mental Clinic");
+        stage.show();
     }
 }
