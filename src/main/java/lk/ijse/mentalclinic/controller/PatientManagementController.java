@@ -15,10 +15,18 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import lk.ijse.mentalclinic.bo.BOFactory;
+
+import java.io.IOException;
 
 public class PatientManagementController {
 
@@ -60,6 +68,10 @@ public class PatientManagementController {
 
     @FXML
     private JFXTextField txtSearch;
+    @FXML
+    ImageView imgExit;
+
+    BOFactory factory = (BOFactory) BOFactory.getInstance().getBO(BOFactory.BOTypes.PATIENT);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -81,8 +93,14 @@ public class PatientManagementController {
 
     }
 
-    public void imgExitOnMouseClicked(MouseEvent mouseEvent) {
-
+    public void imgExitOnMouseClicked(MouseEvent mouseEvent) throws IOException {
+        Stage window = (Stage) imgExit.getScene().getWindow();
+        window.close();
+        Parent parent = FXMLLoader.load(getClass().getResource("/AdminDashboardForm.fxml"));
+        Scene scene = new Scene(parent);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
     }
 }
 

@@ -2,8 +2,17 @@ module lk.ijse.mentalclinic {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.jfoenix;
+    requires jakarta.persistence;
+    requires org.hibernate.orm.core;
+    requires static lombok;
+    requires java.naming;
+    requires jbcrypt;
+    requires mysql.connector.j;
 
 
     opens lk.ijse.mentalclinic.controller to javafx.fxml;
+    opens lk.ijse.mentalclinic.entity to org.hibernate.orm.core;
+
     exports lk.ijse.mentalclinic;
+
 }
