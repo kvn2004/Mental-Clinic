@@ -3,6 +3,8 @@ package lk.ijse.mentalclinic.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,15 +16,25 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import lk.ijse.mentalclinic.bo.BOFactory;
+import lk.ijse.mentalclinic.bo.custom.Impl.TherepistBO;
+import lk.ijse.mentalclinic.dto.TherapistDTO;
+import lk.ijse.mentalclinic.entity.Therapist;
 import lk.ijse.mentalclinic.tm.TherapistTM;
+import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
+
+
 
 public class TherapistManagementController implements Initializable {
+    TherepistBO therepistBO = (TherepistBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.THERAPIST);
     @FXML
-    public JFXComboBox cbSpecialization;
+    public JFXComboBox<String> cbSpecialization;
     @FXML
     private JFXButton btnDelete;
 
@@ -54,7 +66,7 @@ public class TherapistManagementController implements Initializable {
     private ImageView imgExit;
 
     @FXML
-    private TableView<?> tblTherapist;
+    private TableView<TherapistTM> tblTherapist;
 
     @FXML
     private JFXTextField txtID;
@@ -77,7 +89,42 @@ public class TherapistManagementController implements Initializable {
 
     @FXML
     void btnSaveOnAction(ActionEvent event) {
+        String id = txtID.getText();
+        String name = txtName.getText();
+        String specialization = cbSpecialization.getValue();
+        String status = cbStatus.getValue();
+        // Regex patterns
+        Pattern idPattern = Pattern.compile("^T\\d{3}$");
+        Pattern namePattern = Pattern.compile("^[A-Za-z ]{3,}$");
 
+        if (!idPattern.matcher(id).matches()) {
+            AlertUtil.showError("Invalid ID", "ID must start with 'T' followed by 3 digits.");
+            return;
+        }
+
+        if (!namePattern.matcher(name).matches()) {
+            AlertUtil.showError("Invalid Name", "Name must contain only letters and be at least 3 characters.");
+            return;
+        }
+
+        if (specialization == null || specialization.isEmpty()) {
+            AlertUtil.showError("Specialization Required", "Please select a specialization.");
+            return;
+        }
+
+        if (status == null || status.isEmpty()) {
+            AlertUtil.showError("Status Required", "Please select a status.");
+            return;
+        }
+        System.out.println("Valid data. Proceed with saving...");
+
+        TherapistDTO therapist = new TherapistDTO();
+        therapist.setTherapistID(id);
+        therapist.setFullName(name);
+        therapist.setSpecialization(specialization);
+        therapist.setAvailabilitySchedule(status);
+
+        boolean isSaved = therepistBO.saveTherapist(therapist);
     }
 
     @FXML
@@ -99,5 +146,16 @@ public class TherapistManagementController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cbStatus.getItems().addAll("Available", "In Progress");
+        setValues();
+
     }
+    private void setValues() {
+        List<String> allProgram = therepistBO.getAllProgram();
+        ObservableList<String> objects = FXCollections.observableArrayList();
+        for (String program:allProgram){
+            objects.add(program);
+        }
+        cbSpecialization.setItems(objects);
+    }
+
 }

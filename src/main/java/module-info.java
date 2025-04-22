@@ -12,6 +12,7 @@ module lk.ijse.mentalclinic {
 
     opens lk.ijse.mentalclinic.controller to javafx.fxml;
     opens lk.ijse.mentalclinic.entity to org.hibernate.orm.core;
+    opens lk.ijse.mentalclinic.tm to javafx.base;
 
     exports lk.ijse.mentalclinic;
 

@@ -23,7 +23,7 @@
          </font>
       </Label>
       <Separator layoutX="192.0" layoutY="86.0" prefWidth="200.0" />
-      <TableView fx:id="tblTherapyprogram" layoutX="-1.0" layoutY="196.0" prefHeight="203.0" prefWidth="600.0">
+      <TableView fx:id="tblTherapyprogram" layoutX="-1.0" layoutY="196.0" onMouseClicked="#tblTherapyOnClick" prefHeight="203.0" prefWidth="600.0">
          <columns>
             <TableColumn fx:id="colid" minWidth="3.20001220703125" prefWidth="64.800048828125" text="id" />
             <TableColumn fx:id="colName" prefWidth="141.0" text="Name" />
