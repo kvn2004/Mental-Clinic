@@ -1,0 +1,65 @@
+/* Patient Management Stylesheet */
+.root {
+    -fx-background-color: white;
+    -fx-font-family: 'Arial';
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 3px;
+    -fx-padding: 8px;
+}
+
+.text-field:focused {
+    -fx-border-color: #4A90E2;
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+    -fx-background-radius: 3px;
+    -fx-text-fill: white;
+}
+
+.save-button {
+    -fx-background-color: #4CAF50;
+}
+
+.save-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.update-button {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: black;
+}
+
+.update-button:hover {
+    -fx-background-color: #FFA000;
+}
+
+.delete-button {
+    -fx-background-color: #F44336;
+}
+
+.delete-button:hover {
+    -fx-background-color: #D32F2F;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #F5F5F5;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #E0E0E0;
+}

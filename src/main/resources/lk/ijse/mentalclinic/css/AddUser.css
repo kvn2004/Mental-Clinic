@@ -1,0 +1,114 @@
+/* Main colors based on the image */
+* {
+    -fx-primary-dark: #1e2327;
+    -fx-primary-medium: #3c4146;
+    -fx-primary-light: #4d5359;
+    -fx-accent-red: #dd3e3e;
+    -fx-text-color: #ffffff;
+    -fx-light-text: #e0e0e0;
+}
+
+.root {
+    -fx-background-color: white;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Header Section */
+.header-section {
+    -fx-background-color: white;
+}
+
+.header-text {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary-dark;
+    -fx-letter-spacing: 0.1em;
+}
+
+.medical-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary-dark;
+    -fx-letter-spacing: 0.2em;
+}
+
+.clinic-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: normal;
+    -fx-text-fill: -fx-accent-red;
+    -fx-letter-spacing: 0.5em;
+}
+
+/* Content Section */
+.content-section {
+    -fx-background-color: white;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-accent-red;
+    -fx-padding: 0 0 10 0;
+}
+
+.field-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary-dark;
+}
+
+/* Form Controls */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -fx-primary-light;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .password-field:focused, .combo-box:focused {
+    -fx-border-color: -fx-accent-red;
+}
+
+/* Buttons */
+.action-button {
+    -fx-background-color: -fx-primary-medium;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 25px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: -fx-primary-dark;
+}
+
+/* Footer Section */
+.footer-section {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent -fx-primary-light transparent;
+    -fx-border-width: 1px;
+}
+
+.footer-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-primary-dark;
+    -fx-opacity: 0.8;
+}
+
+/* Welcome section styling */
+.welcome-text {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-accent-red;
+}
+
+.instruction-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-primary-dark;
+    -fx-padding: 5 0 20 0;
+}
