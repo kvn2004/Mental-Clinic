@@ -16,9 +16,8 @@ import java.time.LocalDateTime;
 public class TherapySession {
     @Id
     private String sessionID;
-    private LocalDate sessionDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String sessionDate;
+    private String Time;
     private String sessionStatus;
 
     @ManyToOne

@@ -17,4 +17,8 @@ import java.util.List;
 
 public interface TherapistDAO extends CrudDAO<Therapist> {
     List<String> getAllProgram();
+
+    List<String> getAllTherapistID();
+
+    Therapist findById(String therapistID);
 }

@@ -27,4 +27,6 @@ public interface TherepistBO extends SuperBO {
     boolean deleteTherapist(String text);
 
     boolean updateTherapist(TherapistDTO therapist);
+
+    List<String> getAllTherapistID();
 }

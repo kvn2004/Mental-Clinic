@@ -47,4 +47,9 @@ public class PatientBOImpl implements PatientBO {
     public boolean updatePatients(PatientDTO patientDTO) {
         return patientDao.update(new Patient(patientDTO.getPatientID(), patientDTO.getFullName(), patientDTO.getAge(), patientDTO.getPhone()));
     }
+
+    @Override
+    public List<String> getAllpatientsID() {
+        return patientDao.getAllPatientID();
+    }
 }

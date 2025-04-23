@@ -23,4 +23,8 @@ public interface TherapyProgramBO extends SuperBO {
     boolean deleteProgram(String text);
 
     boolean upadateProgremme(TherapyProgramDTO therapyProgramDTO);
+
+    List<String> getAllProgramID();
+
+    double getProgramPrice(String therapy);
 }

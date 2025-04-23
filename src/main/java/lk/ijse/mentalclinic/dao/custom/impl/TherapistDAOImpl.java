@@ -62,4 +62,16 @@ public class TherapistDAOImpl implements TherapistDAO {
     Session session = FactoryConfiguration.getInstance().getSession();
     return session.createQuery("SELECT p.programName FROM TherapyProgram p").list();
   }
+
+  @Override
+  public List<String> getAllTherapistID() {
+    Session session = FactoryConfiguration.getInstance().getSession();
+    return session.createQuery("SELECT p.therapistID FROM Therapist p").list();
+  }
+
+  @Override
+  public Therapist findById(String therapistID) {
+    Session session = FactoryConfiguration.getInstance().getSession();
+    return session.get(Therapist.class, therapistID);
+  }
 }

@@ -16,13 +16,18 @@ import java.math.BigDecimal;
 public class Payment {
     @Id
     private String paymentID;
-    private BigDecimal amount;
+    private double amount;
+    private String date;
     private String status;
 
 
     @ManyToOne
     @JoinColumn(name = "patientID")
     private Patient patient;
+
+    @ManyToOne
+    @JoinColumn(name ="sessionID")
+    private TherapySession therapySession;
 
 
 }

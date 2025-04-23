@@ -54,4 +54,14 @@ public class TherapyProgrammBOImpl implements TherapyProgramBO {
     public boolean upadateProgremme(TherapyProgramDTO therapyProgramDTO) {
         return therapyProgramDAO.update(new TherapyProgram(therapyProgramDTO.getProgramID(),therapyProgramDTO.getProgramName(),therapyProgramDTO.getDuration(),therapyProgramDTO.getFee(),therapyProgramDTO.getDescription()));
     }
+
+    @Override
+    public List<String> getAllProgramID() {
+        return therapyProgramDAO.getAllProgrammID();
+    }
+
+    @Override
+    public double getProgramPrice(String therapy) {
+        return therapyProgramDAO.getProgramPrice(therapy);
+    }
 }

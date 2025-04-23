@@ -11,9 +11,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PaymentDTO {
     private String paymentID;
-    private BigDecimal amount;
+    private double amount;
+    private String date;
     private String status;
     
     // Reference to patient
     private String patientID;
+    private String sessionID;
 }

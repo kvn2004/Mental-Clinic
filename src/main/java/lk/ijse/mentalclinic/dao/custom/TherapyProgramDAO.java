@@ -3,6 +3,8 @@ package lk.ijse.mentalclinic.dao.custom;
 import lk.ijse.mentalclinic.dao.CrudDAO;
 import lk.ijse.mentalclinic.entity.TherapyProgram;
 
+import java.util.List;
+
 /**
  * --------------------------------------------
  * Author: Vihanga Nimsara(kvn2004)
@@ -14,4 +16,8 @@ import lk.ijse.mentalclinic.entity.TherapyProgram;
  **/
 
 public interface TherapyProgramDAO extends CrudDAO<TherapyProgram> {
+    List<String> getAllProgrammID();
+    TherapyProgram findById(String therapyProgramID);
+
+    double getProgramPrice(String therapy);
 }

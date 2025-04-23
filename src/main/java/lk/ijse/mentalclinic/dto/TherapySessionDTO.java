@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TherapySessionDTO {
     private String sessionID;
-    private LocalDate sessionDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String sessionDate;
+    private String time;
     private String sessionStatus;
     
     // References to related entities

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class TherapProgramManagementController implements Initializable {
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colid.setCellValueFactory(new PropertyValueFactory<>("programID"));
@@ -252,4 +253,5 @@ public class TherapProgramManagementController implements Initializable {
         txtDuration.setText(selectedItem.getDuration().toString());
         txtDes.setText(selectedItem.getDescription());
     }
+
 }

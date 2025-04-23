@@ -6,18 +6,57 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import lk.ijse.mentalclinic.bo.BOFactory;
+import lk.ijse.mentalclinic.bo.custom.Impl.TherepistBO;
+import lk.ijse.mentalclinic.bo.custom.PatientBO;
+import lk.ijse.mentalclinic.bo.custom.PaymentBO;
+import lk.ijse.mentalclinic.bo.custom.TherapyProgramBO;
+import lk.ijse.mentalclinic.bo.custom.TherapySessionBO;
+import lk.ijse.mentalclinic.dao.DaoFactory;
+import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
+import lk.ijse.mentalclinic.dao.custom.TherapySessionDAO;
+import lk.ijse.mentalclinic.dto.PaymentDTO;
+import lk.ijse.mentalclinic.dto.TherapySessionDTO;
+import lk.ijse.mentalclinic.tm.TherapySessionTM;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 
-public class TherapySessionSchedulingController {
+public class TherapySessionSchedulingController implements Initializable {
+    TherepistBO therepistBO = (TherepistBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.THERAPIST);
+    TherapyProgramBO therapyProgramBO = (TherapyProgramBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.THERAPYPROGRAMM);
+    PatientBO patientBO = (PatientBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.PATIENT);
+    PaymentBO paymentBO = (PaymentBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.PAYMENT);
+    TherapySessionBO therapySessionBO = (TherapySessionBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.THERAPYSESSION);
+    TherapySessionDAO therapySessionDAO = (TherapySessionDAO) DaoFactory.getInstance().getDAO(DaoFactory.DaoType.TherapySession);
+    PaymentDAO paymentDAO = (PaymentDAO) DaoFactory.getInstance().getDAO(DaoFactory.DaoType.PAYMENT);
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        colID.setCellValueFactory(new PropertyValueFactory<>("sessionID"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("sessionDate"));
+        colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("sessionStatus"));
+        ColPatient.setCellValueFactory(new PropertyValueFactory<>("patient"));
+        colTherapist.setCellValueFactory(new PropertyValueFactory<>("therapist"));
+        colTherapy.setCellValueFactory(new PropertyValueFactory<>("program"));
+        setValues();
+    }
+
+    @FXML
+    private TableColumn<TherapySessionTM, String> ColPatient;
 
     @FXML
     private JFXButton btnDelete;
@@ -29,22 +68,37 @@ public class TherapySessionSchedulingController {
     private JFXButton btnUpdate;
 
     @FXML
-    private JFXComboBox<?> cbPatient;
+    private JFXComboBox<String> cbPatient;
 
     @FXML
-    private JFXComboBox<?> cbTheropy;
+    private JFXComboBox<String> cbStatus;
 
     @FXML
-    private TableColumn<?, ?> colCost;
+    private JFXComboBox<String> cbTherapy;
 
     @FXML
-    private TableColumn<?, ?> colDes;
+    private JFXComboBox<String> cbTheropist;
 
     @FXML
-    private TableColumn<?, ?> colDueration;
+    private JFXComboBox<String> cbTime;
 
     @FXML
-    private TableColumn<?, ?> colName;
+    private TableColumn<TherapySessionTM, String> colDate;
+
+    @FXML
+    private TableColumn<TherapySessionTM, String> colID;
+
+    @FXML
+    private TableColumn<TherapySessionTM, String> colStatus;
+
+    @FXML
+    private TableColumn<TherapySessionTM, String> colTherapist;
+
+    @FXML
+    private TableColumn<TherapySessionTM, String> colTherapy;
+
+    @FXML
+    private TableColumn<TherapySessionTM, String> colTime;
 
     @FXML
     private DatePicker dpSessionDate;
@@ -53,13 +107,10 @@ public class TherapySessionSchedulingController {
     private ImageView imgExit;
 
     @FXML
-    private TableView<?> tbtTherapyShedule;
+    private TableView<TherapySessionTM> tbtTherapyShedule;
 
     @FXML
-    private JFXTextField txtDes;
-
-    @FXML
-    private JFXTextField txtcost;
+    private JFXTextField txtID;
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -68,7 +119,24 @@ public class TherapySessionSchedulingController {
 
     @FXML
     void btnSaveOnAction(ActionEvent event) {
+        String id= txtID.getText();
+        String status= cbStatus.getSelectionModel().getSelectedItem();
+        String therapy= cbTherapy.getSelectionModel().getSelectedItem();
+        String patient= cbPatient.getSelectionModel().getSelectedItem();
+        String therapist=cbTheropist.getSelectionModel().getSelectedItem();
+        String time= cbTime.getSelectionModel().getSelectedItem();
+        String date= String.valueOf(dpSessionDate.getValue());
 
+        boolean isSheduled=therapySessionBO.saveSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
+        PaymentDTO dto =new PaymentDTO();
+        dto.setPaymentID(paymentDAO.generateNextPaymentId());
+        dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
+        dto.setDate(date);
+        dto.setStatus(status);
+        dto.setPatientID(patient);
+        dto.setSessionID(therapy);
+
+        boolean isPaymentAded=paymentBO.savePayment(dto);
     }
 
     @FXML
@@ -85,6 +153,24 @@ public class TherapySessionSchedulingController {
         stage.setScene(scene);
         stage.setTitle("Mental Clinic");
         stage.show();
+    }
+
+    @FXML
+    void tbtTherapySheduleOnClicked(MouseEvent event) {
+
+    }
+
+    private void setValues() {
+        List<String> allProgramID = therapyProgramBO.getAllProgramID();
+        List<String> allTherapistID = therepistBO.getAllTherapistID();
+        List<String> allPatientID = patientBO.getAllpatientsID();
+        cbTherapy.getItems().addAll(allProgramID);
+        cbTheropist.getItems().addAll(allTherapistID);
+        cbPatient.getItems().addAll(allPatientID);
+        cbStatus.getItems().addAll("Pending", "Completed");
+        String TSID = therapySessionDAO.generateNextSessionId();
+        txtID.setText(TSID);
+        cbTime.getItems().addAll("08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM");
     }
 
 }

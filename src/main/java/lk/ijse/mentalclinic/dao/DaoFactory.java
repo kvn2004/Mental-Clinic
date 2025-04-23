@@ -1,10 +1,6 @@
 package lk.ijse.mentalclinic.dao;
 
-import lk.ijse.mentalclinic.dao.custom.UserDao;
-import lk.ijse.mentalclinic.dao.custom.impl.PatientDaoImpl;
-import lk.ijse.mentalclinic.dao.custom.impl.TherapistDAOImpl;
-import lk.ijse.mentalclinic.dao.custom.impl.TherapyProgramDAOImpl;
-import lk.ijse.mentalclinic.dao.custom.impl.UserDaoImpl;
+import lk.ijse.mentalclinic.dao.custom.impl.*;
 
 /**
  * --------------------------------------------
@@ -23,7 +19,7 @@ public class DaoFactory {
         return (daoFactory == null) ? daoFactory = new DaoFactory() : daoFactory;
     }
     public enum DaoType {
-        USER , PATIENT,PROGRAM,THERAPIST
+        USER , PATIENT,PROGRAM,THERAPIST,TherapySession,PAYMENT
     }
 
     public SuperDao getDAO(DaoType daoType) {
@@ -39,6 +35,12 @@ public class DaoFactory {
             }
             case THERAPIST->{
                 return new TherapistDAOImpl();
+            }
+            case TherapySession->{
+                return new TherapySessionDAOImpl();
+            }
+            case PAYMENT->{
+                return new PaymentDaoImpl();
             }
         }
         return null;

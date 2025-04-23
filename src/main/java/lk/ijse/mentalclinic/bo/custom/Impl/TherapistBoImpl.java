@@ -70,5 +70,10 @@ public class TherapistBoImpl implements TherepistBO {
         return therapistDAO.update(therapists);
     }
 
+    @Override
+    public List<String> getAllTherapistID() {
+        return therapistDAO.getAllTherapistID();
+    }
+
 
 }
