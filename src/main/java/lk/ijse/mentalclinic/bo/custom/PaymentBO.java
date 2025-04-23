@@ -3,6 +3,8 @@ package lk.ijse.mentalclinic.bo.custom;
 import lk.ijse.mentalclinic.bo.SuperBO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
 
+import java.util.List;
+
 /**
  * --------------------------------------------
  * Author: Vihanga Nimsara(kvn2004)
@@ -15,4 +17,6 @@ import lk.ijse.mentalclinic.dto.PaymentDTO;
 
 public interface PaymentBO extends SuperBO {
     boolean savePayment(PaymentDTO dto);
+
+    List<PaymentDTO> getAllpayment();
 }

@@ -3,6 +3,8 @@ package lk.ijse.mentalclinic.bo.custom;
 import lk.ijse.mentalclinic.bo.SuperBO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
 
+import java.util.List;
+
 /**
  * --------------------------------------------
  * Author: Vihanga Nimsara(kvn2004)
@@ -15,4 +17,6 @@ import lk.ijse.mentalclinic.dto.TherapySessionDTO;
 
 public interface TherapySessionBO extends SuperBO {
     boolean saveSession(TherapySessionDTO therapySessionDTO);
+
+    List<TherapySessionDTO> getAllTherapyPrograms();
 }

@@ -6,7 +6,12 @@ import lk.ijse.mentalclinic.dao.custom.PatientDao;
 import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dao.custom.TherapySessionDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
+import lk.ijse.mentalclinic.dto.TherapySessionDTO;
 import lk.ijse.mentalclinic.entity.Payment;
+import lk.ijse.mentalclinic.entity.TherapySession;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * --------------------------------------------
@@ -33,5 +38,24 @@ public class PaymentBoImpl implements PaymentBO {
         payment.setPatient(patientDao.findById(dto.getPatientID()));
         payment.setTherapySession(therapySessionDAO.findById(dto.getSessionID()));
         return paymentDAO.save(payment);
+    }
+
+    @Override
+    public List<PaymentDTO> getAllpayment() {
+        List<Payment> entities = paymentDAO.getAll(); // Get entity list
+        List<PaymentDTO> dtoList = new ArrayList<>();
+
+        for (Payment dto : entities) {
+            dtoList.add(new PaymentDTO(
+                    dto.getPaymentID(),
+                    dto.getAmount(),
+                    dto.getDate(),
+                    dto.getStatus(),
+                    dto.getPatient(),
+                    dto.getTherapySession()
+            ));
+        }
+
+        return dtoList;
     }
 }

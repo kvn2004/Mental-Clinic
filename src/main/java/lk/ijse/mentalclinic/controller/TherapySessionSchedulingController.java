@@ -3,6 +3,8 @@ package lk.ijse.mentalclinic.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,8 +28,11 @@ import lk.ijse.mentalclinic.dao.DaoFactory;
 import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dao.custom.TherapySessionDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
+import lk.ijse.mentalclinic.dto.TherapistDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
+import lk.ijse.mentalclinic.tm.TherapistTM;
 import lk.ijse.mentalclinic.tm.TherapySessionTM;
+import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +58,7 @@ public class TherapySessionSchedulingController implements Initializable {
         colTherapist.setCellValueFactory(new PropertyValueFactory<>("therapist"));
         colTherapy.setCellValueFactory(new PropertyValueFactory<>("program"));
         setValues();
+        loadTables();
     }
 
     @FXML
@@ -134,9 +140,13 @@ public class TherapySessionSchedulingController implements Initializable {
         dto.setDate(date);
         dto.setStatus(status);
         dto.setPatientID(patient);
-        dto.setSessionID(therapy);
+        dto.setSessionID(txtID.getText());
 
         boolean isPaymentAded=paymentBO.savePayment(dto);
+        if (isSheduled && isPaymentAded) {
+            AlertUtil.showSuccess("Successfully saved the session","Successfully saved the session");
+            refresh();
+        }
     }
 
     @FXML
@@ -173,4 +183,25 @@ public class TherapySessionSchedulingController implements Initializable {
         cbTime.getItems().addAll("08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM");
     }
 
+    void loadTables(){
+        List<TherapySessionDTO> therapySessionDTOS = therapySessionBO.getAllTherapyPrograms();
+
+        ObservableList<TherapySessionTM> obList = FXCollections.observableArrayList();
+        System.out.println(obList);
+        for (TherapySessionDTO dto:therapySessionDTOS){
+            obList.add(new TherapySessionTM(
+                    dto.getSessionID(),
+                    dto.getSessionDate(),
+                    dto.getTime(),
+                    dto.getSessionStatus(),
+                    dto.getPatientID(),
+                    dto.getTherapistID(),
+                    dto.getProgramID()
+            ));
+        }
+        tbtTherapyShedule.setItems(obList);
+    }
+    void refresh(){
+        loadTables();
+    }
 }

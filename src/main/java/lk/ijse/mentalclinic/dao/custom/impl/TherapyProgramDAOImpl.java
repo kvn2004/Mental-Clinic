@@ -7,7 +7,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * --------------------------------------------
@@ -74,20 +77,36 @@ public class TherapyProgramDAOImpl implements TherapyProgramDAO {
 
     @Override
     public double getProgramPrice(String therapyId) {
-        double programPrice = 0;
-        Session session = FactoryConfiguration.getInstance().getSession();
-        try {
-            Query<Double> query = session.createQuery(
-                    "SELECT p.fee FROM TherapyProgram p WHERE p.programID = :therapyId", Double.class);
-            query.setParameter("therapyId", therapyId);
-
-            programPrice = query.getSingleResult();  // Will throw exception if not found
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
+        if (therapyId == null || therapyId.isEmpty()) {
+            return 0;
         }
 
-        return programPrice;
+        Session session = null;
+        try {
+            session = FactoryConfiguration.getInstance().getSession();
+
+            // Option 1: Use BigDecimal in query and convert to double
+            Query<BigDecimal> query = session.createQuery(
+                    "SELECT p.fee FROM TherapyProgram p WHERE p.programID = :therapyId",
+                    BigDecimal.class);
+            query.setParameter("therapyId", therapyId);
+
+            BigDecimal result = query.uniqueResult();
+            return result != null ? result.doubleValue() : 0;
+
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+                    "Error fetching program price for therapyId: " + therapyId, e);
+            return 0;
+        } finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING,
+                            "Error closing session", e);
+                }
+            }
+        }
     }
 }

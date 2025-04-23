@@ -27,8 +27,9 @@ public class TherapySessionTM {
     private String sessionDate;
     private String time;
     private String sessionStatus;
-    private Patient patient;
-    private Therapist therapist;
-    private TherapyProgram program;
+    private String patient;
+    private String therapist;
+    private String program;
+
 
 }

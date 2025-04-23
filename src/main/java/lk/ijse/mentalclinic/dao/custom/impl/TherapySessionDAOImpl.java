@@ -37,7 +37,8 @@ public class TherapySessionDAOImpl implements TherapySessionDAO {
 
     @Override
     public List<TherapySession> getAll() {
-        return List.of();
+        Session session = FactoryConfiguration.getInstance().getSession();
+        return session.createQuery("FROM TherapySession ").list();
     }
 
     @Override

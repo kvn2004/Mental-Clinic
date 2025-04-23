@@ -6,8 +6,13 @@ import lk.ijse.mentalclinic.dao.custom.PatientDao;
 import lk.ijse.mentalclinic.dao.custom.TherapistDAO;
 import lk.ijse.mentalclinic.dao.custom.TherapyProgramDAO;
 import lk.ijse.mentalclinic.dao.custom.TherapySessionDAO;
+import lk.ijse.mentalclinic.dto.TherapyProgramDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
+import lk.ijse.mentalclinic.entity.TherapyProgram;
 import lk.ijse.mentalclinic.entity.TherapySession;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * --------------------------------------------
@@ -37,5 +42,25 @@ public class TherapySessionBOImpl implements TherapySessionBO {
         therapySession.setTherapist(therapistDAO.findById(therapySessionDTO.getTherapistID()));
         therapySession.setProgram(therapyProgramDAO.findById(therapySessionDTO.getProgramID()));
         return therapySessionDAO.save(therapySession);
+    }
+
+    @Override
+    public List<TherapySessionDTO> getAllTherapyPrograms() {
+        List<TherapySession> entities = therapySessionDAO.getAll(); // Get entity list
+        List<TherapySessionDTO> dtoList = new ArrayList<>();
+
+        for (TherapySession session : entities) {
+            dtoList.add(new TherapySessionDTO(
+                    session.getSessionID(),
+                    session.getSessionDate(),
+                    session.getTime(),
+                    session.getSessionStatus(),
+                    session.getPatient(),
+                    session.getTherapist(),
+                    session.getProgram()
+            ));
+        }
+
+        return dtoList;
     }
 }
