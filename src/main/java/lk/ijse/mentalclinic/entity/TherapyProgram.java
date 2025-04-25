@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter
@@ -20,13 +21,8 @@ public class TherapyProgram {
     private String duration;
     private BigDecimal fee;
     private String description;
+    // If necessary, you can define the reverse relationship
+    @OneToMany(mappedBy = "program", cascade = CascadeType.REMOVE)
+    private List<TherapySession> sessions = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "program")
-//    private List<Registration> registrations;
-//
-//    @OneToMany(mappedBy = "program")
-//    private List<TherapySession> therapySessions;
-//
-//    @OneToMany(mappedBy = "program")
-//    private List<TherapistProgram> therapistPrograms;
 }

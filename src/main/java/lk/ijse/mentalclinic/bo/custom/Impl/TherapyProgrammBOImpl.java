@@ -24,7 +24,16 @@ public class TherapyProgrammBOImpl implements TherapyProgramBO {
 
     @Override
     public boolean saveProgram(TherapyProgramDTO therapyProgramDTO) {
-        return therapyProgramDAO.save(new TherapyProgram(therapyProgramDTO.getProgramID(),therapyProgramDTO.getProgramName(),therapyProgramDTO.getDuration(),therapyProgramDTO.getFee(),therapyProgramDTO.getDescription()));
+        TherapyProgram therapyProgram = new TherapyProgram();
+        therapyProgram.setDescription(therapyProgramDTO.getDescription());
+        therapyProgram.setProgramID(therapyProgramDTO.getProgramID());
+        therapyProgram.setProgramName(therapyProgramDTO.getProgramName());
+        therapyProgram.setDuration(therapyProgramDTO.getDuration());
+        therapyProgram.setFee(therapyProgramDTO.getFee());
+        therapyProgram.setDescription(therapyProgramDTO.getDescription());
+
+
+        return therapyProgramDAO.save(therapyProgram);
     }
 
     @Override
@@ -52,7 +61,14 @@ public class TherapyProgrammBOImpl implements TherapyProgramBO {
 
     @Override
     public boolean upadateProgremme(TherapyProgramDTO therapyProgramDTO) {
-        return therapyProgramDAO.update(new TherapyProgram(therapyProgramDTO.getProgramID(),therapyProgramDTO.getProgramName(),therapyProgramDTO.getDuration(),therapyProgramDTO.getFee(),therapyProgramDTO.getDescription()));
+        TherapyProgram therapyProgram = new TherapyProgram();
+        therapyProgram.setDescription(therapyProgramDTO.getDescription());
+        therapyProgram.setProgramID(therapyProgramDTO.getProgramID());
+        therapyProgram.setProgramName(therapyProgramDTO.getProgramName());
+        therapyProgram.setDuration(therapyProgramDTO.getDuration());
+        therapyProgram.setFee(therapyProgramDTO.getFee());
+        therapyProgram.setDescription(therapyProgramDTO.getDescription());
+        return therapyProgramDAO.update(therapyProgram);
     }
 
     @Override

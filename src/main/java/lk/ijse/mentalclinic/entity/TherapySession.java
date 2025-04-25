@@ -1,10 +1,7 @@
 package lk.ijse.mentalclinic.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 public class TherapySession {
     @Id
@@ -31,11 +29,12 @@ public class TherapySession {
     @JoinColumn(name = "therapistID")
     private Therapist therapist;
 
-    @ManyToOne(cascade = CascadeType.ALL )
+    @ManyToOne
     @JoinColumn(name = "programID")
     private TherapyProgram program;
+
     @OneToMany(mappedBy = "therapySession",
-            cascade = CascadeType.ALL,       // will cascade all ops (persist, remove, etc.)
+            cascade = CascadeType.REMOVE,       // will cascade all ops (persist, remove, etc.)
             orphanRemoval = true)            // will delete orphans automatically
     private List<Payment> payments = new ArrayList<>();
 

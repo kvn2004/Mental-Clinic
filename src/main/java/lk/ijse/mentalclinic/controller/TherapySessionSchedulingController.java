@@ -138,6 +138,7 @@ public class TherapySessionSchedulingController implements Initializable {
         String therapist=cbTheropist.getSelectionModel().getSelectedItem();
         String time= cbTime.getSelectionModel().getSelectedItem();
         String date= String.valueOf(dpSessionDate.getValue());
+        System.out.println(therapy);
         boolean isSheduled=therapySessionBO.saveSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
 
         PaymentDTO dto =new PaymentDTO();
@@ -164,6 +165,7 @@ public class TherapySessionSchedulingController implements Initializable {
         String therapist=cbTheropist.getSelectionModel().getSelectedItem();
         String time= cbTime.getSelectionModel().getSelectedItem();
         String date= String.valueOf(dpSessionDate.getValue());
+        boolean isUpdated=therapySessionBO.updateSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
 
         PaymentDTO dto =new PaymentDTO();
         dto.setPaymentID(paymentBO.getPaymentIDBySessionID(id));
@@ -174,7 +176,6 @@ public class TherapySessionSchedulingController implements Initializable {
         dto.setSessionID(txtID.getText());
         boolean isUpdatedPay=paymentBO.updatePayment(dto);
 
-        boolean isUpdated=therapySessionBO.updateSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
         if (isUpdated && isUpdatedPay) {
             AlertUtil.showSuccess("Successfully updated the session","Successfully updated the session");
             refresh();
@@ -214,8 +215,8 @@ public class TherapySessionSchedulingController implements Initializable {
         cbTheropist.getItems().addAll(allTherapistID);
         cbPatient.getItems().addAll(allPatientID);
         cbStatus.getItems().addAll("Pending", "Completed");
-        String TSID = therapySessionDAO.generateNextSessionId();
-        txtID.setText(TSID);
+
+        txtID.setText(therapySessionDAO.generateNextSessionId());
         cbTime.getItems().addAll("08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM");
     }
 
@@ -238,7 +239,13 @@ public class TherapySessionSchedulingController implements Initializable {
         tbtTherapyShedule.setItems(obList);
     }
     void refresh(){
-
+        txtID.setText(therapySessionDAO.generateNextSessionId());
+        cbTime.setValue("");
+        dpSessionDate.setValue(null);
+        cbStatus.setValue("");
+        cbPatient.setValue("");
+        cbTheropist.setValue("");
+        cbTherapy.setValue("");
         loadTables();
     }
 }

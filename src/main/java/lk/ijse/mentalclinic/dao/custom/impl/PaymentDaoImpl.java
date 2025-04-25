@@ -47,7 +47,12 @@ public class PaymentDaoImpl implements PaymentDAO {
 
     @Override
     public boolean update(Payment payment) {
-        return false;
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(payment);
+        transaction.commit();
+        session.close();
+        return true;
     }
 
 

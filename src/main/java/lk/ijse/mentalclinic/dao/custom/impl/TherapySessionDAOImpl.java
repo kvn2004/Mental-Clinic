@@ -43,12 +43,22 @@ public class TherapySessionDAOImpl implements TherapySessionDAO {
     @Override
     public List<TherapySession> getAll() {
         Session session = FactoryConfiguration.getInstance().getSession();
-        return session.createQuery("FROM TherapySession ").list();
+        List fromTherapySession = session.createQuery("FROM TherapySession ").list();
+        System.out.println("get ALL FROM DAO");
+        for (Object obj : fromTherapySession) {
+            System.out.println(obj.toString());
+        }
+        return fromTherapySession;
     }
 
     @Override
     public boolean update(TherapySession therapySession) {
-        return false;
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction tx = session.beginTransaction();
+        session.update(therapySession);
+        tx.commit();
+        session.close();
+        return true;
     }
 
 

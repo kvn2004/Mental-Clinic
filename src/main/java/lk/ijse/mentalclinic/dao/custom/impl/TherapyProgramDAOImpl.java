@@ -39,7 +39,7 @@ public class TherapyProgramDAOImpl implements TherapyProgramDAO {
     public boolean delete(String text) {
         Session session = FactoryConfiguration.getInstance().getSession();
         Transaction tx = session.beginTransaction();
-        session.remove(session.get(TherapyProgram.class, Integer.parseInt(text)));
+        session.remove(session.get(TherapyProgram.class, text));
         tx.commit();
         session.close();
         return true;
