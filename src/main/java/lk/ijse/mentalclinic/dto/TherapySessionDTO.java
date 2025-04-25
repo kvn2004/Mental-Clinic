@@ -29,8 +29,8 @@ public class TherapySessionDTO {
         this.sessionDate = sessionDate;
         this.time = time;
         this.sessionStatus = sessionStatus;
-        this.patientID = patient.getPatientID();
-        this.therapistID = therapist.getTherapistID();
-        this.programID = program.getProgramID();
+        this.patientID = (patient != null) ? patient.getPatientID() : "N/A";
+        this.therapistID = (therapist != null) ?therapist.getTherapistID(): "N/A";
+        this.programID =(programID != null) ? program.getProgramID(): "N/A";
     }
 }

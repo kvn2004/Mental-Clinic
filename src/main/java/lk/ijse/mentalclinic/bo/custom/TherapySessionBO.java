@@ -23,4 +23,6 @@ public interface TherapySessionBO extends SuperBO {
     boolean updateSession(TherapySessionDTO therapySessionDTO);
 
     boolean deleteSession(String id);
+
+    boolean StatusUpdate(TherapySessionDTO sessionDTO);
 }

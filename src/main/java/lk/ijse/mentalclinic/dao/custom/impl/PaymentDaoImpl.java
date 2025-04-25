@@ -3,7 +3,6 @@ package lk.ijse.mentalclinic.dao.custom.impl;
 import lk.ijse.mentalclinic.config.FactoryConfiguration;
 import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.entity.Payment;
-import lk.ijse.mentalclinic.entity.Therapist;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -22,8 +21,8 @@ import java.util.List;
 public class PaymentDaoImpl implements PaymentDAO {
     @Override
     public boolean save(Payment payment) {
-        Session session= FactoryConfiguration.getInstance().getSession();
-        Transaction transaction=session.beginTransaction();
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
         session.persist(payment);
         transaction.commit();
         session.close();
@@ -32,8 +31,8 @@ public class PaymentDaoImpl implements PaymentDAO {
 
     @Override
     public boolean delete(String text) {
-        Session session= FactoryConfiguration.getInstance().getSession();
-        Transaction transaction=session.beginTransaction();
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
         session.remove(session.get(Payment.class, text));
         transaction.commit();
         session.close();
@@ -48,21 +47,15 @@ public class PaymentDaoImpl implements PaymentDAO {
 
     @Override
     public boolean update(Payment payment) {
-        Session session = FactoryConfiguration.getInstance().getSession();
-        Transaction transaction=session.beginTransaction();
-        session.merge(payment);
-        transaction.commit();
-        session.close();
-        return true;
+        return false;
     }
+
 
     @Override
     public String generateNextPaymentId() {
-       Session session= FactoryConfiguration.getInstance().getSession();
+        Session session = FactoryConfiguration.getInstance().getSession();
 
-        String lastId = (String) session.createQuery("SELECT p.paymentID FROM Payment p ORDER BY p.paymentID DESC")
-                .setMaxResults(1)
-                .uniqueResult();
+        String lastId = (String) session.createQuery("SELECT p.paymentID FROM Payment p ORDER BY p.paymentID DESC").setMaxResults(1).uniqueResult();
 
         session.close();
 
@@ -87,16 +80,22 @@ public class PaymentDaoImpl implements PaymentDAO {
         Session session = FactoryConfiguration.getInstance().getSession();
         Transaction transaction = session.beginTransaction();
 
-        String paymentID = session.createQuery(
-                        "SELECT p.paymentID FROM Payment p WHERE p.therapySession.sessionID = :sessionID",
-                        String.class
-                )
-                .setParameter("sessionID", sessionID)
-                .setMaxResults(1)  // In case multiple match, we take just the first
+        String paymentID = session.createQuery("SELECT p.paymentID FROM Payment p WHERE p.therapySession.sessionID = :sessionID", String.class).setParameter("sessionID", sessionID).setMaxResults(1)  // In case multiple match, we take just the first
                 .uniqueResult();
 
         transaction.commit();
         session.close();
         return paymentID;
+    }
+
+    @Override
+    public boolean updateStatus(Payment payment) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction tx = session.beginTransaction();
+        String hqlUpdatePayment = "UPDATE Payment p " + "SET p.status = :newPaymentStatus " + "WHERE p.paymentID = :paymentID";
+        int result = session.createQuery(hqlUpdatePayment).setParameter("newPaymentStatus", payment.getStatus()).setParameter("paymentID", payment.getPaymentID()).executeUpdate();
+        tx.commit();
+        session.close();
+        return result > 0;
     }
 }

@@ -19,13 +19,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import lk.ijse.mentalclinic.bo.BOFactory;
+import lk.ijse.mentalclinic.bo.custom.PatientBO;
 import lk.ijse.mentalclinic.bo.custom.PaymentBO;
+import lk.ijse.mentalclinic.bo.custom.TherapySessionBO;
 import lk.ijse.mentalclinic.dao.DaoFactory;
 import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
 import lk.ijse.mentalclinic.tm.PaymentTM;
 import lk.ijse.mentalclinic.tm.TherapySessionTM;
+import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,15 +37,20 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class PaymentInvoiceManagementController implements Initializable {
+
     PaymentDAO paymentDAO = (PaymentDAO) DaoFactory.getInstance().getDAO(DaoFactory.DaoType.PAYMENT);
     PaymentBO paymentBO = (PaymentBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.PAYMENT);
+    PatientBO patientBO = (PatientBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.PATIENT);
+    TherapySessionBO therapySessionBO = (TherapySessionBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.THERAPYSESSION);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lblPaymentId.setText(paymentDAO.generateNextPaymentId());
-
+        cbStatus.getItems().addAll("Pending", "Completed");
+        cbPatient.getItems().addAll(patientBO.getAllpatientsID());
         colPaymentId.setCellValueFactory(new PropertyValueFactory<>("paymentID"));
         colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colPatient.setCellValueFactory(new PropertyValueFactory<>("patientID"));
         colSession.setCellValueFactory(new PropertyValueFactory<>("sessionID"));
@@ -62,12 +70,16 @@ public class PaymentInvoiceManagementController implements Initializable {
 
     @FXML
     private JFXButton btnUpdate;
+    @FXML
+    public JFXComboBox<String> cbStatus;
 
     @FXML
     private JFXComboBox<String> cbPatient;
 
     @FXML
     private TableColumn<PaymentTM, BigDecimal> colAmount;
+    @FXML
+    private TableColumn<PaymentTM, String> colStatus;
 
     @FXML
     private TableColumn<PaymentTM, String> colDate;
@@ -99,10 +111,6 @@ public class PaymentInvoiceManagementController implements Initializable {
     @FXML
     private TableView<PaymentTM> tblPayments;
 
-    @FXML
-    void btnDeleteOnAction(ActionEvent event) {
-
-    }
 
     @FXML
     void btnReportOnAction(ActionEvent event) {
@@ -110,12 +118,19 @@ public class PaymentInvoiceManagementController implements Initializable {
     }
 
     @FXML
-    void btnSaveOnAction(ActionEvent event) {
-
-    }
-
-    @FXML
     void btnUpdateOnAction(ActionEvent event) {
+        PaymentDTO dto =new PaymentDTO();
+        dto.setPaymentID(lblPaymentId.getText());
+        dto.setStatus(cbStatus.getValue());
+        boolean isStatusUpdated=paymentBO.StatusUpdate(dto);
+        TherapySessionDTO sessionDTO=new TherapySessionDTO();
+        sessionDTO.setSessionID(lblSession.getText());
+        sessionDTO.setSessionStatus(cbStatus.getValue());
+        boolean isStatusUpdated2=therapySessionBO.StatusUpdate(sessionDTO);
+        if (isStatusUpdated && isStatusUpdated2) {
+            AlertUtil.showSuccess("","Successfully updated the PAYMENT STATUS");
+            refresh();
+        }
 
     }
 
@@ -133,6 +148,15 @@ public class PaymentInvoiceManagementController implements Initializable {
 
     @FXML
     void paymentSelectOnAction(MouseEvent event) {
+        PaymentTM selectedItem = tblPayments.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            lblPaymentId.setText(selectedItem.getPaymentID());
+            lblDate.setText(selectedItem.getDate());
+            lblSession.setText(selectedItem.getSessionID());
+            lblAmount.setText(String.valueOf(selectedItem.getAmount()));
+            cbStatus.setValue(selectedItem.getStatus());
+            cbPatient.setValue(selectedItem.getPatientID());
+        }
 
     }
 

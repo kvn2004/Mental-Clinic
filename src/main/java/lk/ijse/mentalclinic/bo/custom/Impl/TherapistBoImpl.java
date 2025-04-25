@@ -1,5 +1,6 @@
 package lk.ijse.mentalclinic.bo.custom.Impl;
 
+import lk.ijse.mentalclinic.bo.custom.TherepistBO;
 import lk.ijse.mentalclinic.dao.DaoFactory;
 import lk.ijse.mentalclinic.dao.custom.TherapistDAO;
 import lk.ijse.mentalclinic.dto.TherapistDTO;
@@ -73,6 +74,11 @@ public class TherapistBoImpl implements TherepistBO {
     @Override
     public List<String> getAllTherapistID() {
         return therapistDAO.getAllTherapistID();
+    }
+
+    @Override
+    public String generateNextPaymentId() {
+        return therapistDAO.generateNextPaymentId();
     }
 
 

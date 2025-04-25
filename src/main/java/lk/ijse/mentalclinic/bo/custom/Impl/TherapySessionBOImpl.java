@@ -81,4 +81,12 @@ public class TherapySessionBOImpl implements TherapySessionBO {
     public boolean deleteSession(String id) {
         return therapySessionDAO.delete(id);
     }
+
+    @Override
+    public boolean StatusUpdate(TherapySessionDTO sessionDTO) {
+        TherapySession therapySession = new TherapySession();
+        therapySession.setSessionID(sessionDTO.getSessionID());
+        therapySession.setSessionStatus(sessionDTO.getSessionStatus());
+        return therapySessionDAO.updateStatus(therapySession);
+    }
 }

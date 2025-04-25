@@ -18,4 +18,6 @@ public interface PaymentDAO extends CrudDAO<Payment> {
     Payment findById(String paymentId);
 
     String getPaymentIDBySessionID(String id);
+
+    boolean updateStatus(Payment payment);
 }

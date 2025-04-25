@@ -109,4 +109,29 @@ public class TherapyProgramDAOImpl implements TherapyProgramDAO {
             }
         }
     }
+
+    @Override
+    public String generateNextPaymentId() {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+
+        String lastId = (String) session
+                .createQuery("SELECT tp.programID FROM TherapyProgram tp ORDER BY tp.programID DESC")
+                .setMaxResults(1)
+                .uniqueResult();
+
+        transaction.commit();
+        session.close();
+
+        if (lastId == null) {
+            return "TP001";
+        }
+
+        // Extract the numeric part and increment
+        int numericPart = Integer.parseInt(lastId.substring(2));
+        int nextId = numericPart + 1;
+
+        return String.format("TP%03d", nextId);
+
+    }
 }

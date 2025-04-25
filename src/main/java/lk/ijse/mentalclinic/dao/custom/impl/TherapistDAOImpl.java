@@ -74,4 +74,25 @@ public class TherapistDAOImpl implements TherapistDAO {
     Session session = FactoryConfiguration.getInstance().getSession();
     return session.get(Therapist.class, therapistID);
   }
+
+  @Override
+  public String generateNextPaymentId() {
+    Session session = FactoryConfiguration.getInstance().getSession();
+
+    String lastId = (String) session.createQuery("SELECT t.therapistID FROM Therapist t ORDER BY t.therapistID DESC")
+            .setMaxResults(1)
+            .uniqueResult();
+
+    session.close();
+
+    if (lastId == null) {
+      return "T001";  // first ID
+    }
+
+    int numericPart = Integer.parseInt(lastId.substring(1));
+    int nextId = numericPart + 1;
+
+    return String.format("T%03d", nextId);  // T002, T003, etc.
+
+  }
 }

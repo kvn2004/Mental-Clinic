@@ -48,20 +48,14 @@ public class TherapySessionDAOImpl implements TherapySessionDAO {
 
     @Override
     public boolean update(TherapySession therapySession) {
-        Session session = FactoryConfiguration.getInstance().getSession();
-        Transaction tx = session.beginTransaction();
-        session.merge(therapySession);
-        tx.commit();
-        session.close();
-        return true;
+        return false;
     }
+
 
     @Override
     public String generateNextSessionId() {
         Session session = FactoryConfiguration.getInstance().getSession();
-        String lastId = (String) session.createQuery("SELECT t.sessionID FROM TherapySession t ORDER BY t.sessionID DESC")
-                .setMaxResults(1)
-                .uniqueResult();
+        String lastId = (String) session.createQuery("SELECT t.sessionID FROM TherapySession t ORDER BY t.sessionID DESC").setMaxResults(1).uniqueResult();
         session.close();
 
         if (lastId == null) {
@@ -76,5 +70,15 @@ public class TherapySessionDAOImpl implements TherapySessionDAO {
     public TherapySession findById(String therapySessionId) {
         Session session = FactoryConfiguration.getInstance().getSession();
         return session.get(TherapySession.class, therapySessionId);
+    }
+
+    @Override
+    public boolean updateStatus(TherapySession therapySession) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction tx = session.beginTransaction();
+        String hqlUpdateSession = "UPDATE TherapySession t " + "SET t.sessionStatus = :newSessionStatus " + "WHERE t.sessionID = :sessionID";
+        int result = session.createQuery(hqlUpdateSession).setParameter("newSessionStatus", therapySession.getSessionStatus()).setParameter("sessionID", therapySession.getSessionID()).executeUpdate();
+        tx.commit();
+        return result > 0;
     }
 }

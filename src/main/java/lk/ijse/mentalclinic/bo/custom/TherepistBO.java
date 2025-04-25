@@ -1,8 +1,7 @@
-package lk.ijse.mentalclinic.bo.custom.Impl;
+package lk.ijse.mentalclinic.bo.custom;
 
 import lk.ijse.mentalclinic.bo.SuperBO;
 import lk.ijse.mentalclinic.dto.TherapistDTO;
-import lk.ijse.mentalclinic.entity.Therapist;
 
 import java.util.List;
 
@@ -29,4 +28,6 @@ public interface TherepistBO extends SuperBO {
     boolean updateTherapist(TherapistDTO therapist);
 
     List<String> getAllTherapistID();
+
+    String generateNextPaymentId();
 }

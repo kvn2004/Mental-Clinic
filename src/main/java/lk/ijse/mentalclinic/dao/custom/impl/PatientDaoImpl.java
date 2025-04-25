@@ -69,4 +69,25 @@ public class PatientDaoImpl implements PatientDao {
         Session session = FactoryConfiguration.getInstance().getSession();
         return session.get(Patient.class, patientID);
     }
+
+    @Override
+    public String generateNextPaymentId() {
+        Session session = FactoryConfiguration.getInstance().getSession();
+
+        String lastId = (String) session.createQuery("SELECT p.patientID FROM Patient p ORDER BY p.patientID DESC")
+                .setMaxResults(1)
+                .uniqueResult();
+
+        session.close();
+
+        if (lastId == null) {
+            return "P001";
+        }
+
+        int numericPart = Integer.parseInt(lastId.substring(1));
+        int nextId = numericPart + 1;
+
+        return String.format("P%03d", nextId);
+
+    }
 }

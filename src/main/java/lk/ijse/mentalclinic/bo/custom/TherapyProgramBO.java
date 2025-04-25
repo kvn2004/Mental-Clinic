@@ -27,4 +27,5 @@ public interface TherapyProgramBO extends SuperBO {
     List<String> getAllProgramID();
 
     double getProgramPrice(String therapy);
+    String generateNextPaymentId();
 }

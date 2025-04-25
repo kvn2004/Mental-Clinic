@@ -17,4 +17,6 @@ import lk.ijse.mentalclinic.entity.TherapySession;
 public interface TherapySessionDAO extends CrudDAO<TherapySession> {
     String generateNextSessionId();
     TherapySession findById(String therapySessionId);
+
+    boolean updateStatus(TherapySession therapySession);
 }

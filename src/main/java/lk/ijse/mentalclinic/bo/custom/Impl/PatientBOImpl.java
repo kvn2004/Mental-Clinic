@@ -52,4 +52,9 @@ public class PatientBOImpl implements PatientBO {
     public List<String> getAllpatientsID() {
         return patientDao.getAllPatientID();
     }
+
+    @Override
+    public String generateNextPaymentId() {
+        return patientDao.generateNextPaymentId();
+    }
 }

@@ -31,7 +31,7 @@ public class TherapySession {
     @JoinColumn(name = "therapistID")
     private Therapist therapist;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "programID")
     private TherapyProgram program;
     @OneToMany(mappedBy = "therapySession",

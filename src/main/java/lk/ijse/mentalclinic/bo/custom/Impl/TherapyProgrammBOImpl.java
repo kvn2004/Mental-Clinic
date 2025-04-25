@@ -64,4 +64,9 @@ public class TherapyProgrammBOImpl implements TherapyProgramBO {
     public double getProgramPrice(String therapy) {
         return therapyProgramDAO.getProgramPrice(therapy);
     }
+
+    @Override
+    public String generateNextPaymentId() {
+        return therapyProgramDAO.generateNextPaymentId();
+    }
 }

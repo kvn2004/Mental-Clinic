@@ -18,12 +18,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import lk.ijse.mentalclinic.bo.BOFactory;
-import lk.ijse.mentalclinic.bo.custom.Impl.TherepistBO;
+import lk.ijse.mentalclinic.bo.custom.TherepistBO;
 import lk.ijse.mentalclinic.dto.TherapistDTO;
-import lk.ijse.mentalclinic.dto.TherapyProgramDTO;
-import lk.ijse.mentalclinic.entity.Therapist;
 import lk.ijse.mentalclinic.tm.TherapistTM;
-import lk.ijse.mentalclinic.tm.TherapyProgramTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
@@ -196,6 +193,7 @@ public class TherapistManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        txtID.setText(therepistBO.generateNextPaymentId());
         colID.setCellValueFactory(new PropertyValueFactory<>("therapistID"));
         colName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("availabilitySchedule"));
@@ -232,7 +230,8 @@ public class TherapistManagementController implements Initializable {
 
    private void refresh(){
         loadTable();
-         txtID.setText("");
+       txtID.setText(therepistBO.generateNextPaymentId());
+
          txtName.setText("");
         cbSpecialization.setValue(null);
         cbStatus.setValue(null);

@@ -19,4 +19,5 @@ import java.util.List;
 public interface PatientDao extends CrudDAO<Patient> {
     List<String> getAllPatientID();
     Patient findById(String patientID);
+    String generateNextPaymentId();
 }

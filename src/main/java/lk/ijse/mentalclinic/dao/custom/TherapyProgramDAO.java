@@ -20,4 +20,5 @@ public interface TherapyProgramDAO extends CrudDAO<TherapyProgram> {
     TherapyProgram findById(String therapyProgramID);
 
     double getProgramPrice(String therapy);
+    String generateNextPaymentId();
 }

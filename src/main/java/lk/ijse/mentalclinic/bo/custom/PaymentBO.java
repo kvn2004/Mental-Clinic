@@ -25,4 +25,8 @@ public interface PaymentBO extends SuperBO {
     String getPaymentIDBySessionID(String id);
 
     boolean deletePayment(String paymentIDBySessionID);
+
+    boolean StatusUpdate(PaymentDTO dto);
+
+    String generateNextPaymentId();
 }

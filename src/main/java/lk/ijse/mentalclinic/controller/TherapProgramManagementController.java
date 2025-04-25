@@ -32,6 +32,7 @@ public class TherapProgramManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        txtID.setText(therapyProgramBO.generateNextPaymentId());
         colid.setCellValueFactory(new PropertyValueFactory<>("programID"));
         colName.setCellValueFactory(new PropertyValueFactory<>("programName"));
         colDuration.setCellValueFactory(new PropertyValueFactory<>("duration"));
@@ -112,8 +113,8 @@ public class TherapProgramManagementController implements Initializable {
         String cost = txtCost.getText();
         String duration = txtDuration.getText();
 
-        if (!id.matches("\\d+")) {
-            showAlert("Invalid ID", "ID must be numeric.");
+        if (!id.matches("^TP\\d{3}$")) {
+            showAlert("Invalid ID", "ID must start with 'TP' followed by 3 digits.");
             return;
         }
 
@@ -157,8 +158,8 @@ public class TherapProgramManagementController implements Initializable {
         String cost = txtCost.getText();
         String duration = txtDuration.getText();
 
-        if (!id.matches("\\d+")) {
-            showAlert("Invalid ID", "ID must be numeric.");
+        if (!id.matches("^TP\\d{3}$")) {
+            showAlert("Invalid ID", "ID must start with 'TP' followed by 3 digits.");
             return;
         }
 
@@ -238,7 +239,7 @@ public class TherapProgramManagementController implements Initializable {
     }
     public void refreshTable() {
         loadTables();
-        txtID.setText("");
+        txtID.setText(therapyProgramBO.generateNextPaymentId());
         txtName.setText("");
         txtCost.setText("");
         txtDuration.setText("");

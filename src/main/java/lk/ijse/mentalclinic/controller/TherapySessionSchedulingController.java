@@ -19,7 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import lk.ijse.mentalclinic.bo.BOFactory;
-import lk.ijse.mentalclinic.bo.custom.Impl.TherepistBO;
+import lk.ijse.mentalclinic.bo.custom.TherepistBO;
 import lk.ijse.mentalclinic.bo.custom.PatientBO;
 import lk.ijse.mentalclinic.bo.custom.PaymentBO;
 import lk.ijse.mentalclinic.bo.custom.TherapyProgramBO;
@@ -28,9 +28,7 @@ import lk.ijse.mentalclinic.dao.DaoFactory;
 import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dao.custom.TherapySessionDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
-import lk.ijse.mentalclinic.dto.TherapistDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
-import lk.ijse.mentalclinic.tm.TherapistTM;
 import lk.ijse.mentalclinic.tm.TherapySessionTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
 

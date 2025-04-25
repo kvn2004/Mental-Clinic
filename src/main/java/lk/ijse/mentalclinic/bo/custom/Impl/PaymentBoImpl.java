@@ -80,4 +80,17 @@ public class PaymentBoImpl implements PaymentBO {
     public boolean deletePayment(String paymentIDBySessionID) {
         return paymentDAO.delete(paymentIDBySessionID);
     }
+
+    @Override
+    public boolean StatusUpdate(PaymentDTO dto) {
+        Payment payment = new Payment();
+        payment.setPaymentID(dto.getPaymentID());
+        payment.setStatus(dto.getStatus());
+        return paymentDAO.updateStatus(payment);
+    }
+
+    @Override
+    public String generateNextPaymentId() {
+        return paymentDAO.generateNextPaymentId();
+    }
 }

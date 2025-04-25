@@ -45,6 +45,7 @@ public class PatientManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        txtPatientID.setText(patientBO.generateNextPaymentId());
         colID.setCellValueFactory(new PropertyValueFactory<>("patientID"));
         colName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
@@ -228,7 +229,8 @@ public class PatientManagementController implements Initializable {
     }
     void refresh(){
         loadTable();
-        txtPatientID.setText("");
+        txtPatientID.setText(patientBO.generateNextPaymentId());
+
         txtName.setText("");
         txtAge.setText("");
         txtTel.setText("");
