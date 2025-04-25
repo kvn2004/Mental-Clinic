@@ -36,6 +36,7 @@ import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -120,6 +121,13 @@ public class TherapySessionSchedulingController implements Initializable {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
+        String id= txtID.getText();
+        boolean isDeleted = therapySessionBO.deleteSession(id);
+       // boolean ispayment = paymentBO.deletePayment(paymentBO.getPaymentIDBySessionID(id));
+        if (isDeleted){
+            refresh();
+            AlertUtil.showSuccess("Successfully deleted the session","Session successfully deleted");
+        }
 
     }
 
@@ -132,8 +140,8 @@ public class TherapySessionSchedulingController implements Initializable {
         String therapist=cbTheropist.getSelectionModel().getSelectedItem();
         String time= cbTime.getSelectionModel().getSelectedItem();
         String date= String.valueOf(dpSessionDate.getValue());
-
         boolean isSheduled=therapySessionBO.saveSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
+
         PaymentDTO dto =new PaymentDTO();
         dto.setPaymentID(paymentDAO.generateNextPaymentId());
         dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
@@ -141,8 +149,8 @@ public class TherapySessionSchedulingController implements Initializable {
         dto.setStatus(status);
         dto.setPatientID(patient);
         dto.setSessionID(txtID.getText());
-
         boolean isPaymentAded=paymentBO.savePayment(dto);
+
         if (isSheduled && isPaymentAded) {
             AlertUtil.showSuccess("Successfully saved the session","Successfully saved the session");
             refresh();
@@ -151,7 +159,28 @@ public class TherapySessionSchedulingController implements Initializable {
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
+        String id= txtID.getText();
+        String status= cbStatus.getSelectionModel().getSelectedItem();
+        String therapy= cbTherapy.getSelectionModel().getSelectedItem();
+        String patient= cbPatient.getSelectionModel().getSelectedItem();
+        String therapist=cbTheropist.getSelectionModel().getSelectedItem();
+        String time= cbTime.getSelectionModel().getSelectedItem();
+        String date= String.valueOf(dpSessionDate.getValue());
 
+        PaymentDTO dto =new PaymentDTO();
+        dto.setPaymentID(paymentBO.getPaymentIDBySessionID(id));
+        dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
+        dto.setDate(date);
+        dto.setStatus(status);
+        dto.setPatientID(patient);
+        dto.setSessionID(txtID.getText());
+        boolean isUpdatedPay=paymentBO.updatePayment(dto);
+
+        boolean isUpdated=therapySessionBO.updateSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
+        if (isUpdated && isUpdatedPay) {
+            AlertUtil.showSuccess("Successfully updated the session","Successfully updated the session");
+            refresh();
+        }
     }
 
     @FXML
@@ -167,6 +196,15 @@ public class TherapySessionSchedulingController implements Initializable {
 
     @FXML
     void tbtTherapySheduleOnClicked(MouseEvent event) {
+        TherapySessionTM selectedItem = tbtTherapyShedule.getSelectionModel().getSelectedItem();
+
+        txtID.setText(selectedItem.getSessionID());
+        cbTime.setValue(selectedItem.getTime());
+        dpSessionDate.setValue(LocalDate.parse(selectedItem.getSessionDate()));
+        cbStatus.setValue(selectedItem.getSessionStatus());
+        cbPatient.setValue(selectedItem.getPatient());
+        cbTheropist.setValue(selectedItem.getTherapist());
+        cbTherapy.setValue(selectedItem.getProgram());
 
     }
 
@@ -202,6 +240,7 @@ public class TherapySessionSchedulingController implements Initializable {
         tbtTherapyShedule.setItems(obList);
     }
     void refresh(){
+
         loadTables();
     }
 }

@@ -32,18 +32,28 @@ public class PaymentDaoImpl implements PaymentDAO {
 
     @Override
     public boolean delete(String text) {
-        return false;
+        Session session= FactoryConfiguration.getInstance().getSession();
+        Transaction transaction=session.beginTransaction();
+        session.remove(session.get(Payment.class, text));
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     @Override
     public List<Payment> getAll() {
         Session session = FactoryConfiguration.getInstance().getSession();
-        return session.createQuery("FROM Payment").list();
+        return session.createQuery("SELECT p FROM Payment p LEFT JOIN FETCH p.patient LEFT JOIN FETCH p.therapySession", Payment.class).list();
     }
 
     @Override
     public boolean update(Payment payment) {
-        return false;
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction=session.beginTransaction();
+        session.merge(payment);
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     @Override
@@ -70,5 +80,23 @@ public class PaymentDaoImpl implements PaymentDAO {
     public Payment findById(String paymentId) {
         Session session = FactoryConfiguration.getInstance().getSession();
         return session.get(Payment.class, paymentId);
+    }
+
+    @Override
+    public String getPaymentIDBySessionID(String sessionID) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+
+        String paymentID = session.createQuery(
+                        "SELECT p.paymentID FROM Payment p WHERE p.therapySession.sessionID = :sessionID",
+                        String.class
+                )
+                .setParameter("sessionID", sessionID)
+                .setMaxResults(1)  // In case multiple match, we take just the first
+                .uniqueResult();
+
+        transaction.commit();
+        session.close();
+        return paymentID;
     }
 }

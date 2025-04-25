@@ -16,4 +16,6 @@ import lk.ijse.mentalclinic.entity.Payment;
 public interface PaymentDAO extends CrudDAO<Payment> {
     String generateNextPaymentId();
     Payment findById(String paymentId);
+
+    String getPaymentIDBySessionID(String id);
 }

@@ -20,7 +20,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PaymentTM {
     private String paymentID;
-    private String amount;
+    private double amount;
+    private String date;
     private String status;
 
     // Reference to patient

@@ -63,4 +63,22 @@ public class TherapySessionBOImpl implements TherapySessionBO {
 
         return dtoList;
     }
+
+    @Override
+    public boolean updateSession(TherapySessionDTO therapySessionDTO) {
+        TherapySession therapySession = new TherapySession();
+        therapySession.setSessionID(therapySessionDTO.getSessionID());
+        therapySession.setSessionDate(therapySessionDTO.getSessionDate());
+        therapySession.setTime(therapySessionDTO.getTime());
+        therapySession.setSessionStatus(therapySessionDTO.getSessionStatus());
+        therapySession.setPatient(patientDao.findById(therapySessionDTO.getPatientID()));
+        therapySession.setTherapist(therapistDAO.findById(therapySessionDTO.getTherapistID()));
+        therapySession.setProgram(therapyProgramDAO.findById(therapySessionDTO.getProgramID()));
+        return therapySessionDAO.update(therapySession);
+    }
+
+    @Override
+    public boolean deleteSession(String id) {
+        return therapySessionDAO.delete(id);
+    }
 }

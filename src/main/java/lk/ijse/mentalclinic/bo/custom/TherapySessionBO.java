@@ -19,4 +19,8 @@ public interface TherapySessionBO extends SuperBO {
     boolean saveSession(TherapySessionDTO therapySessionDTO);
 
     List<TherapySessionDTO> getAllTherapyPrograms();
+
+    boolean updateSession(TherapySessionDTO therapySessionDTO);
+
+    boolean deleteSession(String id);
 }

@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,5 +34,9 @@ public class TherapySession {
     @ManyToOne
     @JoinColumn(name = "programID")
     private TherapyProgram program;
+    @OneToMany(mappedBy = "therapySession",
+            cascade = CascadeType.ALL,       // will cascade all ops (persist, remove, etc.)
+            orphanRemoval = true)            // will delete orphans automatically
+    private List<Payment> payments = new ArrayList<>();
 
 }

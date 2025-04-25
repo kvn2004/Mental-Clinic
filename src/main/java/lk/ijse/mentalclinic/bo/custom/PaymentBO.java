@@ -19,4 +19,10 @@ public interface PaymentBO extends SuperBO {
     boolean savePayment(PaymentDTO dto);
 
     List<PaymentDTO> getAllpayment();
+
+    boolean updatePayment(PaymentDTO dto);
+
+    String getPaymentIDBySessionID(String id);
+
+    boolean deletePayment(String paymentIDBySessionID);
 }

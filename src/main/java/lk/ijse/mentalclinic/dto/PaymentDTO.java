@@ -26,8 +26,9 @@ public class PaymentDTO {
         this.amount = amount;
         this.date = date;
         this.status = status;
-        this.patientID = patient.getPatientID();
-        this.sessionID = therapySession.getSessionID();
+        this.patientID = (patient != null) ? patient.getPatientID() : "N/A";
+        this.sessionID = (therapySession != null) ? therapySession.getSessionID() : "N/A";
     }
+
 }
 

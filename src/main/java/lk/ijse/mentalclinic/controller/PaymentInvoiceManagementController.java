@@ -28,6 +28,7 @@ import lk.ijse.mentalclinic.tm.PaymentTM;
 import lk.ijse.mentalclinic.tm.TherapySessionTM;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -42,6 +43,7 @@ public class PaymentInvoiceManagementController implements Initializable {
 
         colPaymentId.setCellValueFactory(new PropertyValueFactory<>("paymentID"));
         colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colPatient.setCellValueFactory(new PropertyValueFactory<>("patientID"));
         colSession.setCellValueFactory(new PropertyValueFactory<>("sessionID"));
         colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -65,7 +67,7 @@ public class PaymentInvoiceManagementController implements Initializable {
     private JFXComboBox<String> cbPatient;
 
     @FXML
-    private TableColumn<PaymentTM, String> colAmount;
+    private TableColumn<PaymentTM, BigDecimal> colAmount;
 
     @FXML
     private TableColumn<PaymentTM, String> colDate;
@@ -137,16 +139,18 @@ public class PaymentInvoiceManagementController implements Initializable {
     void loadTables(){
         List<PaymentDTO> dtos = paymentBO.getAllpayment();
         ObservableList<PaymentTM> obList = FXCollections.observableArrayList();
-        System.out.println(dtos);
-        for (PaymentDTO dto:dtos){
+
+        for (PaymentDTO dto : dtos) {
             obList.add(new PaymentTM(
-                 dto.getPaymentID(),
-                 dto.getAmount()+"",
-                 dto.getStatus(),
-                 dto.getPatientID(),
-                 dto.getSessionID()
+                    dto.getPaymentID(),
+                    dto.getAmount(),
+                    dto.getDate(),
+                    dto.getStatus(),
+                    dto.getPatientID(),
+                    dto.getSessionID()
             ));
         }
+
         tblPayments.setItems(obList);
     }
     void refresh(){

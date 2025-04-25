@@ -55,7 +55,29 @@ public class PaymentBoImpl implements PaymentBO {
                     dto.getTherapySession()
             ));
         }
-
+        System.out.println(dtoList);
         return dtoList;
+    }
+
+    @Override
+    public boolean updatePayment(PaymentDTO dto) {
+        Payment payment = new Payment();
+        payment.setPaymentID(dto.getPaymentID());
+        payment.setAmount(dto.getAmount());
+        payment.setDate(dto.getDate());
+        payment.setStatus(dto.getStatus());
+        payment.setPatient(patientDao.findById(dto.getPatientID()));
+        payment.setTherapySession(therapySessionDAO.findById(dto.getSessionID()));
+        return paymentDAO.update(payment);
+    }
+
+    @Override
+    public String getPaymentIDBySessionID(String id) {
+        return paymentDAO.getPaymentIDBySessionID(id);
+    }
+
+    @Override
+    public boolean deletePayment(String paymentIDBySessionID) {
+        return paymentDAO.delete(paymentIDBySessionID);
     }
 }

@@ -31,8 +31,13 @@ public class TherapySessionDAOImpl implements TherapySessionDAO {
     }
 
     @Override
-    public boolean delete(String text) {
-        return false;
+    public boolean delete(String id) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction tx = session.beginTransaction();
+        session.remove(session.load(TherapySession.class, id));
+        tx.commit();
+        session.close();
+        return true;
     }
 
     @Override
@@ -43,7 +48,12 @@ public class TherapySessionDAOImpl implements TherapySessionDAO {
 
     @Override
     public boolean update(TherapySession therapySession) {
-        return false;
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction tx = session.beginTransaction();
+        session.merge(therapySession);
+        tx.commit();
+        session.close();
+        return true;
     }
 
     @Override
