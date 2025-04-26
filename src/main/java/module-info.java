@@ -8,6 +8,7 @@ module lk.ijse.mentalclinic {
     requires java.naming;
     requires jbcrypt;
     requires mysql.connector.j;
+    requires net.sf.jasperreports.core;
 
 
     opens lk.ijse.mentalclinic.controller to javafx.fxml;

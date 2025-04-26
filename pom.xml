@@ -14,6 +14,26 @@
         <junit.version>5.10.2</junit.version>
     </properties>
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>7.0.2</version>
+        </dependency>
+        <!-- Logging Dependency -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version> <!-- SLF4J version -->
+        </dependency>
+        <!-- SLF4J Logger Implementation (Optional but recommended) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
@@ -108,5 +128,13 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+
     </build>
 </project>

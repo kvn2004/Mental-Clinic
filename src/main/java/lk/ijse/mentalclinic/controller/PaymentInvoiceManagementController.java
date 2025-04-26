@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -27,13 +26,17 @@ import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
 import lk.ijse.mentalclinic.tm.PaymentTM;
-import lk.ijse.mentalclinic.tm.TherapySessionTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class PaymentInvoiceManagementController implements Initializable {
@@ -115,20 +118,66 @@ public class PaymentInvoiceManagementController implements Initializable {
     @FXML
     void btnReportOnAction(ActionEvent event) {
 
+        String paymentID = lblPaymentId.getText();
+        String amountText = lblAmount.getText();
+        String date = lblDate.getText();
+        String patientID = cbPatient.getValue();
+        String sessionID = lblSession.getText();
+        String status = cbStatus.getValue();
+
+        if (paymentID == null || paymentID.isEmpty()) {
+            System.err.println("Payment ID is required");
+            return;
+        }
+        double amount = 0;
+        try {
+            amount = amountText == null || amountText.isEmpty()
+                    ? 0
+                    : Double.parseDouble(amountText);
+        } catch (NumberFormatException nfe) {
+            System.err.println("Invalid amount: " + amountText);
+            return;
+        }
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("paymentID", paymentID);
+        parameters.put("amount", amount);
+        parameters.put("date", date);
+        parameters.put("patientID", patientID);
+        parameters.put("sessionID", sessionID);
+        parameters.put("status", status);
+        InputStream reportStream = getClass().getResourceAsStream("/Payment.jrxml");
+        if (reportStream == null) {
+            System.err.println("Cannot find /reports/Payment.jrxml on classpath");
+            return;
+        }
+        try {
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(
+                    jasperReport,
+                    parameters,
+                    new JREmptyDataSource(1)
+            );
+            JasperViewer.viewReport(jasperPrint, false);
+
+        } catch (JRException jrEx) {
+
+            jrEx.printStackTrace();
+        }
     }
+
 
     @FXML
     void btnUpdateOnAction(ActionEvent event) {
-        PaymentDTO dto =new PaymentDTO();
+        PaymentDTO dto = new PaymentDTO();
         dto.setPaymentID(lblPaymentId.getText());
         dto.setStatus(cbStatus.getValue());
-        boolean isStatusUpdated=paymentBO.StatusUpdate(dto);
-        TherapySessionDTO sessionDTO=new TherapySessionDTO();
+        boolean isStatusUpdated = paymentBO.StatusUpdate(dto);
+        TherapySessionDTO sessionDTO = new TherapySessionDTO();
         sessionDTO.setSessionID(lblSession.getText());
         sessionDTO.setSessionStatus(cbStatus.getValue());
-        boolean isStatusUpdated2=therapySessionBO.StatusUpdate(sessionDTO);
+        boolean isStatusUpdated2 = therapySessionBO.StatusUpdate(sessionDTO);
         if (isStatusUpdated && isStatusUpdated2) {
-            AlertUtil.showSuccess("","Successfully updated the PAYMENT STATUS");
+            AlertUtil.showSuccess("", "Successfully updated the PAYMENT STATUS");
             refresh();
         }
 
@@ -160,7 +209,7 @@ public class PaymentInvoiceManagementController implements Initializable {
 
     }
 
-    void loadTables(){
+    void loadTables() {
         List<PaymentDTO> dtos = paymentBO.getAllpayment();
         ObservableList<PaymentTM> obList = FXCollections.observableArrayList();
 
@@ -177,7 +226,8 @@ public class PaymentInvoiceManagementController implements Initializable {
 
         tblPayments.setItems(obList);
     }
-    void refresh(){
+
+    void refresh() {
         loadTables();
     }
 }
