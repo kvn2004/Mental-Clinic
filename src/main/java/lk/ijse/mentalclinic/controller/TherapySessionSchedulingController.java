@@ -29,6 +29,7 @@ import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dao.custom.TherapySessionDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.tm.TherapySessionTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
 
@@ -139,21 +140,28 @@ public class TherapySessionSchedulingController implements Initializable {
         String time= cbTime.getSelectionModel().getSelectedItem();
         String date= String.valueOf(dpSessionDate.getValue());
         System.out.println(therapy);
-        boolean isSheduled=therapySessionBO.saveSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
+        try {
+            boolean isSheduled=therapySessionBO.saveSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
+            PaymentDTO dto =new PaymentDTO();
+            dto.setPaymentID(paymentDAO.generateNextPaymentId());
+            dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
+            dto.setDate(date);
+            dto.setStatus(status);
+            dto.setPatientID(patient);
+            dto.setSessionID(txtID.getText());
+            boolean isPaymentAded=paymentBO.savePayment(dto);
 
-        PaymentDTO dto =new PaymentDTO();
-        dto.setPaymentID(paymentDAO.generateNextPaymentId());
-        dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
-        dto.setDate(date);
-        dto.setStatus(status);
-        dto.setPatientID(patient);
-        dto.setSessionID(txtID.getText());
-        boolean isPaymentAded=paymentBO.savePayment(dto);
-
-        if (isSheduled && isPaymentAded) {
-            AlertUtil.showSuccess("Successfully saved the session","Successfully saved the session");
-            refresh();
+            if (isSheduled && isPaymentAded) {
+                AlertUtil.showSuccess("Successfully saved the session","Successfully saved the session");
+                refresh();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            AlertUtil.showError("Something went wrong","Something went wrong");
         }
+
+
+
     }
 
     @FXML
@@ -165,21 +173,26 @@ public class TherapySessionSchedulingController implements Initializable {
         String therapist=cbTheropist.getSelectionModel().getSelectedItem();
         String time= cbTime.getSelectionModel().getSelectedItem();
         String date= String.valueOf(dpSessionDate.getValue());
-        boolean isUpdated=therapySessionBO.updateSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
+        try {
+            boolean isUpdated=therapySessionBO.updateSession(new TherapySessionDTO(id,date,time,status,patient,therapist,therapy));
 
-        PaymentDTO dto =new PaymentDTO();
-        dto.setPaymentID(paymentBO.getPaymentIDBySessionID(id));
-        dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
-        dto.setDate(date);
-        dto.setStatus(status);
-        dto.setPatientID(patient);
-        dto.setSessionID(txtID.getText());
-        boolean isUpdatedPay=paymentBO.updatePayment(dto);
+            PaymentDTO dto =new PaymentDTO();
+            dto.setPaymentID(paymentBO.getPaymentIDBySessionID(id));
+            dto.setAmount(therapyProgramBO.getProgramPrice(therapy));
+            dto.setDate(date);
+            dto.setStatus(status);
+            dto.setPatientID(patient);
+            dto.setSessionID(txtID.getText());
+            boolean isUpdatedPay=paymentBO.updatePayment(dto);
 
-        if (isUpdated && isUpdatedPay) {
-            AlertUtil.showSuccess("Successfully updated the session","Successfully updated the session");
-            refresh();
+            if (isUpdated && isUpdatedPay) {
+                AlertUtil.showSuccess("Successfully updated the session","Successfully updated the session");
+                refresh();
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showError("Something went wrong",e.getMessage());
         }
+
     }
 
     @FXML

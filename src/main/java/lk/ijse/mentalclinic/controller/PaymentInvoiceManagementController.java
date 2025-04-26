@@ -25,6 +25,7 @@ import lk.ijse.mentalclinic.dao.DaoFactory;
 import lk.ijse.mentalclinic.dao.custom.PaymentDAO;
 import lk.ijse.mentalclinic.dto.PaymentDTO;
 import lk.ijse.mentalclinic.dto.TherapySessionDTO;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.tm.PaymentTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
 import net.sf.jasperreports.engine.*;
@@ -175,11 +176,18 @@ public class PaymentInvoiceManagementController implements Initializable {
         TherapySessionDTO sessionDTO = new TherapySessionDTO();
         sessionDTO.setSessionID(lblSession.getText());
         sessionDTO.setSessionStatus(cbStatus.getValue());
-        boolean isStatusUpdated2 = therapySessionBO.StatusUpdate(sessionDTO);
-        if (isStatusUpdated && isStatusUpdated2) {
-            AlertUtil.showSuccess("", "Successfully updated the PAYMENT STATUS");
-            refresh();
+
+        try {
+            boolean isStatusUpdated2 = therapySessionBO.StatusUpdate(sessionDTO);
+            if (isStatusUpdated && isStatusUpdated2) {
+                AlertUtil.showSuccess("", "Successfully updated the PAYMENT STATUS");
+                refresh();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.showError("Error", e.getMessage());
         }
+
 
     }
 
@@ -197,15 +205,20 @@ public class PaymentInvoiceManagementController implements Initializable {
 
     @FXML
     void paymentSelectOnAction(MouseEvent event) {
-        PaymentTM selectedItem = tblPayments.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            lblPaymentId.setText(selectedItem.getPaymentID());
-            lblDate.setText(selectedItem.getDate());
-            lblSession.setText(selectedItem.getSessionID());
-            lblAmount.setText(String.valueOf(selectedItem.getAmount()));
-            cbStatus.setValue(selectedItem.getStatus());
-            cbPatient.setValue(selectedItem.getPatientID());
+        try {
+            PaymentTM selectedItem = tblPayments.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                lblPaymentId.setText(selectedItem.getPaymentID());
+                lblDate.setText(selectedItem.getDate());
+                lblSession.setText(selectedItem.getSessionID());
+                lblAmount.setText(String.valueOf(selectedItem.getAmount()));
+                cbStatus.setValue(selectedItem.getStatus());
+                cbPatient.setValue(selectedItem.getPatientID());
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showError("Error", e.getMessage());
         }
+
 
     }
 

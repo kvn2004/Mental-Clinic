@@ -31,6 +31,8 @@ import lk.ijse.mentalclinic.bo.BOFactory;
 import lk.ijse.mentalclinic.bo.custom.PatientBO;
 import lk.ijse.mentalclinic.dto.PatientDTO;
 import lk.ijse.mentalclinic.dto.TherapistDTO;
+import lk.ijse.mentalclinic.exception.MyCustomException;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.tm.PatientTM;
 import lk.ijse.mentalclinic.tm.TherapistTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
@@ -97,11 +99,16 @@ public class PatientManagementController implements Initializable {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-        boolean isDeleted = patientBO.deletePatient(txtPatientID.getText());
-        if (isDeleted) {
-            refresh();
-            AlertUtil.showSuccess("Successful","Delete Patient Successfully");
+        try {
+            boolean isDeleted = patientBO.deletePatient(txtPatientID.getText());
+            if (isDeleted) {
+                refresh();
+                AlertUtil.showSuccess("Successful","Delete Patient Successfully");
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showError("Patient Not Found",e.getMessage());
         }
+
     }
 
     @FXML
@@ -137,11 +144,16 @@ public class PatientManagementController implements Initializable {
             AlertUtil.showError("Invalid Phone Number", "Phone number should contain exactly 10 digits starting with 0 (e.g., 0771234567).");
             return;
         }
-        boolean isSaved = patientBO.savePatients(new PatientDTO(id,name,age,tel));
-        if (isSaved) {
-            AlertUtil.showSuccess("Patient Saved", "Patient Saved");
-            refresh();
+        try {
+            boolean isSaved = patientBO.savePatients(new PatientDTO(id,name,age,tel));
+            if (isSaved) {
+                AlertUtil.showSuccess("Patient Saved", "Patient Saved");
+                refresh();
+            }
+        }catch (MyCustomRuntimeException e) {
+            AlertUtil.showError("Patient Save Error", e.getMessage());
         }
+
     }
 
     @FXML
@@ -177,11 +189,16 @@ public class PatientManagementController implements Initializable {
             AlertUtil.showError("Invalid Phone Number", "Phone number should contain exactly 10 digits starting with 0 (e.g., 0771234567).");
             return;
         }
-        boolean isUpdated = patientBO.updatePatients(new PatientDTO(id,name,age,tel));
-        if (isUpdated) {
-            AlertUtil.showSuccess("Updated", "Patient Updated");
-            refresh();
+        try {
+            boolean isUpdated = patientBO.updatePatients(new PatientDTO(id,name,age,tel));
+            if (isUpdated) {
+                AlertUtil.showSuccess("Updated", "Patient Updated");
+                refresh();
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showWarning("Warning", e.getMessage());
         }
+
     }
 
     @FXML

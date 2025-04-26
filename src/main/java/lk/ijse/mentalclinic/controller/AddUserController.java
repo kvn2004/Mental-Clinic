@@ -22,13 +22,15 @@ import lk.ijse.mentalclinic.Role;
 import lk.ijse.mentalclinic.bo.BOFactory;
 import lk.ijse.mentalclinic.bo.custom.AddUserBO;
 import lk.ijse.mentalclinic.dto.UserDTO;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.util.PasswordUtil;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AddUserController implements Initializable {
+public class
+AddUserController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         roleComboBox.getItems().addAll(Role.values());
@@ -82,17 +84,22 @@ public class AddUserController implements Initializable {
         } else {
             System.out.println("User ID: " + userID + "\nUsername: " + username + "\nPassword: " + password + "\nRole: " + role);
             String hashpwd= PasswordUtil.hashPassword(password);
-            boolean isSaved = addUserBO.saveUser(new UserDTO(userID, username, hashpwd, role));
-            if (isSaved){
-                showAlert("User added successfully!");
-                Stage stage = (Stage) saveButton.getScene().getWindow();
-                stage.close();
-                Parent load = FXMLLoader.load(getClass().getResource("/logingPage.fxml"));
-                Scene scene = new Scene(load);
-                stage.setScene(scene);
-                stage.setTitle("Mental Clinic");
-                stage.show();
+            try {
+                boolean isSaved = addUserBO.saveUser(new UserDTO(userID, username, hashpwd, role));
+                if (isSaved){
+                    showAlert("User added successfully!");
+                    Stage stage = (Stage) saveButton.getScene().getWindow();
+                    stage.close();
+                    Parent load = FXMLLoader.load(getClass().getResource("/logingPage.fxml"));
+                    Scene scene = new Scene(load);
+                    stage.setScene(scene);
+                    stage.setTitle("Mental Clinic");
+                    stage.show();
+                }
+            }catch (MyCustomRuntimeException e){
+                showAlert(e.getMessage());
             }
+
         }
     }
     private void showAlert(String message) {

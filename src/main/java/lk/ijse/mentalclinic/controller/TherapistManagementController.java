@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import lk.ijse.mentalclinic.bo.BOFactory;
 import lk.ijse.mentalclinic.bo.custom.TherepistBO;
 import lk.ijse.mentalclinic.dto.TherapistDTO;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.tm.TherapistTM;
 import lk.ijse.mentalclinic.util.AlertUtil;
 
@@ -79,11 +80,16 @@ public class TherapistManagementController implements Initializable {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-       boolean isDeleted =therepistBO.deleteTherapist(txtID.getText());
-       if(isDeleted){
-           AlertUtil.showSuccess("Deleted Therapist","Therapist deleted successfully");
-           refresh();
-       }
+        try {
+            boolean isDeleted =therepistBO.deleteTherapist(txtID.getText());
+            if(isDeleted){
+                AlertUtil.showSuccess("Deleted Therapist","Therapist deleted successfully");
+                refresh();
+            }
+        }catch (Exception e){
+            AlertUtil.showError(e.getMessage(),"Therapist Not Found");
+        }
+
     }
 
     @FXML
@@ -127,12 +133,17 @@ public class TherapistManagementController implements Initializable {
         therapist.setFullName(name);
         therapist.setSpecialization(specialization);
         therapist.setAvailabilitySchedule(status);
-
-        boolean isSaved = therepistBO.saveTherapist(therapist);
-        if(isSaved){
-            AlertUtil.showSuccess("Successful","Successfully saved the therapist.");
-            refresh();
+        try {
+            boolean isSaved = therepistBO.saveTherapist(therapist);
+            if(isSaved){
+                AlertUtil.showSuccess("Successful","Successfully saved the therapist.");
+                refresh();
+            }
+        }catch (MyCustomRuntimeException e){
+            e.printStackTrace();
+            AlertUtil.showError(e.getMessage(),"Therapist could not be saved");
         }
+
     }
 
     @FXML
@@ -172,12 +183,17 @@ public class TherapistManagementController implements Initializable {
         therapist.setFullName(name);
         therapist.setSpecialization(specialization);
         therapist.setAvailabilitySchedule(status);
-
-        boolean isUpdated = therepistBO.updateTherapist(therapist);
-        if (isUpdated){
-            AlertUtil.showSuccess("Successful","Successfully updated the therapist.");
-            refresh();
+        try {
+            boolean isUpdated = therepistBO.updateTherapist(therapist);
+            if (isUpdated){
+                AlertUtil.showSuccess("Successful","Successfully updated the therapist.");
+                refresh();
+            }
+        }catch (MyCustomRuntimeException e){
+            e.printStackTrace();
+            AlertUtil.showError(e.getMessage(),"Therapist update failed");
         }
+
     }
 
     @FXML

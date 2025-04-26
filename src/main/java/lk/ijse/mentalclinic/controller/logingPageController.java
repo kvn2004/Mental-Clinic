@@ -30,6 +30,7 @@ import javafx.stage.Window;
 import lk.ijse.mentalclinic.bo.BOFactory;
 import lk.ijse.mentalclinic.bo.custom.UserBo;
 import lk.ijse.mentalclinic.dto.UserDTO;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.util.PasswordUtil;
 
 import java.io.IOException;
@@ -59,40 +60,45 @@ public class logingPageController {
 
     @FXML
     void btnLogingOnAction(ActionEvent event) throws IOException {
-        String username = txtUsername.getText();
-        String password = txtPwd.getText();
-        List<UserDTO> userDTOS = userBo.checkUser(username, password);
-        System.out.println(userDTOS);
+        try {
+            String username = txtUsername.getText();
+            String password = txtPwd.getText();
+            List<UserDTO> userDTOS = userBo.checkUser(username, password);
+            System.out.println(userDTOS);
 
-        String role =userDTOS.get(0).getRole();
-        boolean haveAccess=false;
+            String role =userDTOS.get(0).getRole();
+            boolean haveAccess=false;
 
-        if (PasswordUtil.checkPassword(password,userDTOS.get(0).getPassword())){
-            haveAccess=true;
-        }else {
-            new Alert(Alert.AlertType.ERROR, "Wrong PASSWORD..").show();
-        }
-        if (haveAccess){
-            if (role.equalsIgnoreCase("admin")){
-                Stage stage = (Stage) btnLoging.getScene().getWindow();
-                stage.close();
-
-                Parent load = FXMLLoader.load(getClass().getResource("/AdminDashboardForm.fxml"));
-                Scene scene = new Scene(load);
-                stage.setScene(scene);
-                stage.setTitle("Mental Clinic");
-                stage.show();
+            if (PasswordUtil.checkPassword(password,userDTOS.get(0).getPassword())){
+                haveAccess=true;
+            }else {
+                new Alert(Alert.AlertType.ERROR, "Wrong PASSWORD..").show();
             }
-            if (role.equalsIgnoreCase("Employee")){
-                Stage stage = (Stage) btnLoging.getScene().getWindow();
-                stage.close();
-                Parent load = FXMLLoader.load(getClass().getResource("/ReceptionistDashboardForm.fxml"));
-                Scene scene = new Scene(load);
-                stage.setScene(scene);
-                stage.setTitle("Mental Clinic");
-                stage.show();
+            if (haveAccess){
+                if (role.equalsIgnoreCase("admin")){
+                    Stage stage = (Stage) btnLoging.getScene().getWindow();
+                    stage.close();
+
+                    Parent load = FXMLLoader.load(getClass().getResource("/AdminDashboardForm.fxml"));
+                    Scene scene = new Scene(load);
+                    stage.setScene(scene);
+                    stage.setTitle("Mental Clinic");
+                    stage.show();
+                }
+                if (role.equalsIgnoreCase("Employee")){
+                    Stage stage = (Stage) btnLoging.getScene().getWindow();
+                    stage.close();
+                    Parent load = FXMLLoader.load(getClass().getResource("/ReceptionistDashboardForm.fxml"));
+                    Scene scene = new Scene(load);
+                    stage.setScene(scene);
+                    stage.setTitle("Mental Clinic");
+                    stage.show();
+                }
             }
+        }catch (Exception e){
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }
+
 
     }
 

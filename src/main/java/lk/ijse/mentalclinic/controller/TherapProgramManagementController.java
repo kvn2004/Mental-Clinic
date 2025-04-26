@@ -20,7 +20,9 @@ import javafx.stage.Stage;
 import lk.ijse.mentalclinic.bo.BOFactory;
 import lk.ijse.mentalclinic.bo.custom.TherapyProgramBO;
 import lk.ijse.mentalclinic.dto.TherapyProgramDTO;
+import lk.ijse.mentalclinic.exception.MyCustomRuntimeException;
 import lk.ijse.mentalclinic.tm.TherapyProgramTM;
+import lk.ijse.mentalclinic.util.AlertUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -91,12 +93,17 @@ public class TherapProgramManagementController implements Initializable {
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
-
-        boolean isDeleted=therapyProgramBO.deleteProgram(txtID.getText());
-        if (isDeleted) {
-            showAlert("Success", "Therapy program has been deleted!");
-            refreshTable();
+        try {
+            boolean isDeleted=therapyProgramBO.deleteProgram(txtID.getText());
+            if (isDeleted) {
+                showAlert("Success", "Therapy program has been deleted!");
+                refreshTable();
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showWarning("",e.getMessage());
         }
+
+
 
     }
 
@@ -142,11 +149,16 @@ public class TherapProgramManagementController implements Initializable {
         System.out.println("All are correct");
         // Proceed with your logic...
         BigDecimal fee = new BigDecimal(cost);
-        boolean isSaved = therapyProgramBO.saveProgram(new TherapyProgramDTO(id, name, duration, fee, description));
-        if (isSaved) {
-            showAlert("Success", "Therapy program has been saved!");
-            refreshTable();
+        try {
+            boolean isSaved = therapyProgramBO.saveProgram(new TherapyProgramDTO(id, name, duration, fee, description));
+            if (isSaved) {
+                showAlert("Success", "Therapy program has been saved!");
+                refreshTable();
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showWarning("",e.getMessage());
         }
+
     }
 
 
@@ -186,11 +198,16 @@ public class TherapProgramManagementController implements Initializable {
         // All valid
         System.out.println("All are correct");
         BigDecimal fee = new BigDecimal(cost);
-        boolean isUpdated =therapyProgramBO.upadateProgremme(new TherapyProgramDTO(id, name, duration, fee, description));
-        if (isUpdated) {
-            showAlert("Success", "Therapy program has been updated!");
-            refreshTable();
+        try {
+            boolean isUpdated =therapyProgramBO.upadateProgremme(new TherapyProgramDTO(id, name, duration, fee, description));
+            if (isUpdated) {
+                showAlert("Success", "Therapy program has been updated!");
+                refreshTable();
+            }
+        }catch (MyCustomRuntimeException e){
+            AlertUtil.showWarning("",e.getMessage());
         }
+
 
     }
 
